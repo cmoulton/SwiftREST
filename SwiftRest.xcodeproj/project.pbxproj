@@ -16,7 +16,7 @@
 		CFE4B7E01A98DF8900DB16AF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFE4B7DE1A98DF8900DB16AF /* LaunchScreen.xib */; };
 		CFE4B7EC1A98DF8900DB16AF /* SwiftRestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7EB1A98DF8900DB16AF /* SwiftRestTests.swift */; };
 		CFE4B7F91A99FD3000DB16AF /* StarWarsSpecies.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7F81A99FD3000DB16AF /* StarWarsSpecies.swift */; };
-		CFE82FD01AAB3DB2001A12F1 /* StringToArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE82FCF1AAB3DB2001A12F1 /* StringToArray.swift */; };
+		CFE82FD01AAB3DB2001A12F1 /* StringArrayConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE82FCF1AAB3DB2001A12F1 /* StringArrayConvertible.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,7 +45,7 @@
 		CFE4B7EB1A98DF8900DB16AF /* SwiftRestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftRestTests.swift; sourceTree = "<group>"; };
 		CFE4B7F51A98DFFA00DB16AF /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		CFE4B7F81A99FD3000DB16AF /* StarWarsSpecies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarWarsSpecies.swift; sourceTree = "<group>"; };
-		CFE82FCF1AAB3DB2001A12F1 /* StringToArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringToArray.swift; sourceTree = "<group>"; };
+		CFE82FCF1AAB3DB2001A12F1 /* StringArrayConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringArrayConvertible.swift; sourceTree = "<group>"; };
 		DD84577790D0F72673070880 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -102,7 +102,7 @@
 			children = (
 				CFE4B7D51A98DF8900DB16AF /* AppDelegate.swift */,
 				CFE4B7D71A98DF8900DB16AF /* ViewController.swift */,
-				CFE82FCF1AAB3DB2001A12F1 /* StringToArray.swift */,
+				CFE82FCF1AAB3DB2001A12F1 /* StringArrayConvertible.swift */,
 				CFE4B7D91A98DF8900DB16AF /* Main.storyboard */,
 				CFC44F171AA3753700F69B53 /* SpeciesDetailViewController.swift */,
 				CFE4B7F81A99FD3000DB16AF /* StarWarsSpecies.swift */,
@@ -300,7 +300,7 @@
 			files = (
 				CFE4B7D81A98DF8900DB16AF /* ViewController.swift in Sources */,
 				CFE4B7D61A98DF8900DB16AF /* AppDelegate.swift in Sources */,
-				CFE82FD01AAB3DB2001A12F1 /* StringToArray.swift in Sources */,
+				CFE82FD01AAB3DB2001A12F1 /* StringArrayConvertible.swift in Sources */,
 				CFC44F181AA3753700F69B53 /* SpeciesDetailViewController.swift in Sources */,
 				CFE4B7F91A99FD3000DB16AF /* StarWarsSpecies.swift in Sources */,
 			);

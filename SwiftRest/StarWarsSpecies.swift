@@ -38,6 +38,13 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
+class SpeciesWrapper {
+  var species: Array<StarWarsSpecies>?
+  var count: Int?
+  private var next: String?
+  private var previous: String?
+}
+
 enum SpeciesFields: String {
   case Name = "name"
   case Classification = "classification"
@@ -54,13 +61,6 @@ enum SpeciesFields: String {
   case Created = "created"
   case Edited = "edited"
   case Url = "url"
-}
-
-class SpeciesWrapper {
-  var species: Array<StarWarsSpecies>?
-  var count: Int?
-  private var next: String?
-  private var previous: String?
 }
 
 class StarWarsSpecies {
@@ -265,10 +265,11 @@ extension Alamofire.Request {
       println(json)
       let results = json["results"]
       println(results)
-      for jsonSpecies in results
+      for (index, jsonSpecies) in results
       {
-        println(jsonSpecies.1)
-        let species = StarWarsSpecies(json: jsonSpecies.1, id: jsonSpecies.0.toInt())
+        println(jsonSpecies)
+        println(index)
+        let species = StarWarsSpecies(json: jsonSpecies, id: index.toInt())
         allSpecies.append(species)
       }
       wrapper.species = allSpecies
