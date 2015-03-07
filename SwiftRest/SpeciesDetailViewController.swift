@@ -32,6 +32,16 @@ class SpeciesDetailViewController: UIViewController {
     {
       return
     }
+    
+    if let name =  self.species!.name
+    {
+      self.title = name
+      if let language = self.species!.language
+      {
+        self.descriptionLabel!.text! += "Members of the \(name) species speak \(language)."
+      }
+      
+    }
   }
   
 }
