@@ -114,6 +114,23 @@ class StarWarsSpecies {
     
     // arrays
     // People, Films
+    // there are arrays of JSON objects, so we need to extract the strings from them
+    if let jsonArray = json[SpeciesFields.People.rawValue].array
+    {
+      self.people = Array<String>()
+      for entry in jsonArray
+      {
+          self.people?.append(entry.stringValue)
+      }
+    }
+    if let jsonArray = json[SpeciesFields.Films.rawValue].array
+    {
+      self.films = Array<String>()
+      for entry in jsonArray
+      {
+        self.films?.append(entry.stringValue)
+      }
+    }
     
     // Dates
     // Created, Edited
