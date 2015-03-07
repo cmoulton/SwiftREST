@@ -267,8 +267,6 @@ extension Alamofire.Request {
       println(results)
       for (index, jsonSpecies) in results
       {
-        println(jsonSpecies)
-        println(index)
         let species = StarWarsSpecies(json: jsonSpecies, id: index.toInt())
         allSpecies.append(species)
       }
