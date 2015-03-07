@@ -38,12 +38,12 @@ class SpeciesDetailViewController: UIViewController {
       self.title = name
       if let language = self.species!.language
       {
-        self.descriptionLabel!.text! += "Members of the \(name) species speak \(language)."
+        self.descriptionLabel!.text! += "Members of the \(name) species speak \(language). "
       }
       
       if let height = self.species!.averageHeight
       {
-        self.descriptionLabel!.text! += " The \(self.species!.name!) can be identified by their height, typically \(self.species!.averageHeight!)cm."
+        self.descriptionLabel!.text! += "The \(self.species!.name!) can be identified by their height, typically \(self.species!.averageHeight!)cm."
       }
       
       var eyeColors:String?

@@ -89,6 +89,7 @@ class StarWarsSpecies {
     self.name = json[SpeciesFields.Name.rawValue].stringValue
     self.classification = json[SpeciesFields.Classification.rawValue].stringValue
     self.designation = json[SpeciesFields.Designation.rawValue].stringValue
+    self.language = json[SpeciesFields.Language.rawValue].stringValue
     // lifespan is sometimes "unknown" or "infinite", so we can't use an int
     self.averageLifespan = json[SpeciesFields.AverageLifespan.rawValue].stringValue
     self.homeworld = json[SpeciesFields.Homeworld.rawValue].stringValue
@@ -153,7 +154,7 @@ class StarWarsSpecies {
     aDateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
     return aDateFormatter
   }
-  
+
   // MARK: Endpoints
   class func endpointForID(id: Int) -> String {
     return "http://swapi.co/api/species/\(id)"
