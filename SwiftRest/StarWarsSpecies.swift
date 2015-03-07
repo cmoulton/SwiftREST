@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 Teak Mobile Inc. All rights reserved.
 //
 
-import Foundation
-
 /* API Response to http http://swapi.co/api/species/3/ looks like:
 {
   "name": "Wookiee",
@@ -76,7 +74,7 @@ class StarWarsSpecies {
   var skinColors: String?
   var hairColors: String? // TODO: parse into array
   var eyeColors: String? // TODO: array
-  var averageLifespan: Int?
+  var averageLifespan: String?
   var homeworld: String?
   var language: String?
   var people: Array<String>?
@@ -88,12 +86,40 @@ class StarWarsSpecies {
   required init(json: JSON, id: Int?) {
     println(json)
     self.idNumber = id
+    
+    // strings
     self.name = json[SpeciesFields.Name.rawValue].stringValue
     self.classification = json[SpeciesFields.Classification.rawValue].stringValue
     self.designation = json[SpeciesFields.Designation.rawValue].stringValue
-    self.averageHeight = json[SpeciesFields.AverageHeight.rawValue].int
-    // TODO: more fields!    
+    // lifespan is sometimes "unknown" or "infinite", so we can't use an int
+    self.averageLifespan = json[SpeciesFields.AverageLifespan.rawValue].stringValue
+    self.homeworld = json[SpeciesFields.Homeworld.rawValue].stringValue
+    self.url = json[SpeciesFields.Url.rawValue].stringValue
+    
+    // ints
+    self.averageHeight = json[SpeciesFields.AverageHeight.rawValue].intValue
+    
+    // strings to arrays like "a, b, c"
+    // SkinColors, HairColors, EyeColors
+    
+    // arrays
+    // People, Films
+    
+    // Dates
+    // Created, Edited
   }
+
+  
+  // MARK: Value transformers
+  class func dateFormatter() -> NSDateFormatter {
+    // TODO: reuse date formatter, they're expensive!
+    var sharedDateFormatter = NSDateFormatter()
+    sharedDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SZ"
+    sharedDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+    sharedDateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+    return sharedDateFormatter
+  }
+  
 
   // MARK: Endpoints
   class func endpointForID(id: Int) -> String {
