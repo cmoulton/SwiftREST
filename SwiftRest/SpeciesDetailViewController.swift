@@ -19,4 +19,19 @@ class SpeciesDetailViewController: UIViewController {
     super.viewDidLoad()
   }
   
+  override func viewWillAppear(animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    self.displaySpeciesDetails()
+  }
+  
+  func displaySpeciesDetails()
+  {
+    self.descriptionLabel!.text = ""
+    if self.species == nil
+    {
+      return
+    }
+  }
+  
 }
