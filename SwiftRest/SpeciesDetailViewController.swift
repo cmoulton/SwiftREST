@@ -11,6 +11,10 @@ import UIKit
 
 class SpeciesDetailViewController: UIViewController {
   
+  @IBOutlet var descriptionLabel: UILabel?
+  
+  var species:StarWarsSpecies?
+  
   override func viewDidLoad() {
     super.viewDidLoad()
   }
