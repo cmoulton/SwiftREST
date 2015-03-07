@@ -42,6 +42,7 @@ class SpeciesDetailViewController: UIViewController {
       }
       
     }
+    self.descriptionLabel!.sizeToFit() // to top-align text
   }
   
 }
