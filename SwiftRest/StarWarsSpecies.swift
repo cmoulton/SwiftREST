@@ -54,8 +54,6 @@ enum SpeciesFields: String {
   case Created = "created"
   case Edited = "edited"
   case Url = "url"
-  
-  //static let allFieldNames = [Name, Classification, Designation, AverageHeight, SkinColors, HairColors, EyeColors, AverageLifespan, Homeworld, Language, People, Films, Created, Edited, Url]
 }
 
 class SpeciesWrapper {
@@ -71,9 +69,9 @@ class StarWarsSpecies {
   var classification: String?
   var designation: String?
   var averageHeight: Int?
-  var skinColors: String?
-  var hairColors: String? // TODO: parse into array
-  var eyeColors: String? // TODO: array
+  var skinColors: Array<String>?
+  var hairColors: Array<String>?
+  var eyeColors: Array<String>?
   var averageLifespan: String?
   var homeworld: String?
   var language: String?
@@ -101,6 +99,18 @@ class StarWarsSpecies {
     
     // strings to arrays like "a, b, c"
     // SkinColors, HairColors, EyeColors
+    if let string = json[SpeciesFields.SkinColors.rawValue].string
+    {
+      self.skinColors = string.splitStringToArray()
+    }
+    if let string = json[SpeciesFields.HairColors.rawValue].string
+    {
+      self.hairColors = string.splitStringToArray()
+    }
+    if let string = json[SpeciesFields.EyeColors.rawValue].string
+    {
+      self.eyeColors = string.splitStringToArray()
+    }
     
     // arrays
     // People, Films
@@ -108,7 +118,7 @@ class StarWarsSpecies {
     // Dates
     // Created, Edited
   }
-
+  
   
   // MARK: Value transformers
   class func dateFormatter() -> NSDateFormatter {
