@@ -134,20 +134,26 @@ class StarWarsSpecies {
     
     // Dates
     // Created, Edited
+    let dateFormatter = StarWarsSpecies.dateFormatter()
+    if let dateString = json[SpeciesFields.Created.rawValue].string
+    {
+      self.created = dateFormatter.dateFromString(dateString)
+    }
+    if let dateString = json[SpeciesFields.Edited.rawValue].string
+    {
+      self.edited = dateFormatter.dateFromString(dateString)
+    }
   }
   
-  
-  // MARK: Value transformers
   class func dateFormatter() -> NSDateFormatter {
     // TODO: reuse date formatter, they're expensive!
-    var sharedDateFormatter = NSDateFormatter()
-    sharedDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SZ"
-    sharedDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
-    sharedDateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-    return sharedDateFormatter
+    var aDateFormatter = NSDateFormatter()
+    aDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SZ"
+    aDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
+    aDateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+    return aDateFormatter
   }
   
-
   // MARK: Endpoints
   class func endpointForID(id: Int) -> String {
     return "http://swapi.co/api/species/\(id)"
