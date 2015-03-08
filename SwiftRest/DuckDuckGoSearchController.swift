@@ -61,12 +61,75 @@ The results look like the following and includes an image:
 
 import Foundation
 import Alamofire
-import SwiftyJSONextension Alamofire.Request {
 import SwiftyJSON
 
+class ImageSearchResult
+{
+  let imageURL:String?
+  let source:String?
+  let attributionURL:String?
+  var image:UIImage?
+  
+  required init(anImageURL: String?, aSource: String?, anAttributionURL: String?) {
+    imageURL = anImageURL
+    source = aSource
+    attributionURL = anAttributionURL
+  }
+  
+  func fullAttribution() -> String {
+    var result:String = ""
+    if attributionURL != nil && attributionURL!.isEmpty == false {
+      result += "Image from \(attributionURL!)"
+    }
+    if source != nil && source!.isEmpty == false  {
+      if result.isEmpty
+      {
+        result += "Image from "
+      }
+      result += " \(source!)"
+    }
+    return result
+  }
+}
 
 class duckDuckGoSearchController
 {
+  private class func endpointForSearchString(searchString: String) -> String {
+    // URL encode it, e.g., "Yoda's Species" -> "Yoda%27s%20Species"
+    // and add star wars to the search string so that we don't get random pictures of the Hutt valley or Droid phones
+    let encoded = "\(searchString) star wars".stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+    // create the search string
+    // append &t=grokswift so DuckDuckGo knows who's using their services
+    return "http://api.duckduckgo.com/?q=\(encoded!)&format=json&t=grokswift"
+  }
+  
+  class func imageFromSearchString(searchString: String, completionHandler: (ImageSearchResult?, NSError?) -> Void) {
+    let searchURLString = endpointForSearchString(searchString)
+    Alamofire.request(.GET, searchURLString)
+      .responseDuckDuckGoImageURL { (request, response, imageURLResult, error) in
+        if let anError = error
+        {
+          completionHandler(imageURLResult, error)
+          return
+        }
+        if imageURLResult == nil || imageURLResult?.imageURL?.isEmpty == true
+        {
+          completionHandler(imageURLResult, nil)
+          return
+        }
+        // got the URL, now to load it
+        Alamofire.request(.GET, imageURLResult!.imageURL!)
+          .response { (request, response, data, error) in
+            if data == nil
+            {
+              completionHandler(imageURLResult, nil)
+              return
+            }
+            imageURLResult?.image = UIImage(data: data! as NSData)
+            completionHandler(imageURLResult, nil)
+        }
+    }
+  }
 
 }
 
