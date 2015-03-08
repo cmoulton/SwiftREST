@@ -59,7 +59,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
           alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
           self.presentViewController(alert, animated: true, completion: nil)
         }
-        println("got more!")
         self.addSpeciesFromWrapper(moreWrapper)
         self.isLoadingSpecies = false
         self.tableview?.reloadData()

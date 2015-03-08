@@ -82,7 +82,6 @@ class StarWarsSpecies {
   var url: String?
   
   required init(json: JSON, id: Int?) {
-    println(json)
     self.idNumber = id
     
     // strings
@@ -209,7 +208,6 @@ extension Alamofire.Request {
   // single species
   class func speciesResponseSerializer() -> Serializer {
     return { request, response, data in
-      println(data)
       if data == nil {
         return (nil, nil)
       }
@@ -262,9 +260,7 @@ extension Alamofire.Request {
       wrapper.count = json["count"].intValue
       
       var allSpecies:Array = Array<StarWarsSpecies>()
-      println(json)
       let results = json["results"]
-      println(results)
       for (index, jsonSpecies) in results
       {
         let species = StarWarsSpecies(json: jsonSpecies, id: index.toInt())
