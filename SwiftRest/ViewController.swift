@@ -115,18 +115,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
   }
   
-  // alternate row colors
-  func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-    if indexPath.row % 2 == 0
-    {
-      cell.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0) // very light gray
-    }
-    else
-    {
-      cell.backgroundColor = UIColor.whiteColor()
-    }
-  }
-  
   // MARK: Segue
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     super.prepareForSegue(segue, sender: sender)
