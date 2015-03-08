@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B37D56527B2D233C370989B8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6CA6A9D6233A0BF23A96829 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		CFC2AB021AAC85D6002E12F1 /* DuckDuckGoSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC2AB011AAC85D6002E12F1 /* DuckDuckGoSearchController.swift */; };
 		CFC44F181AA3753700F69B53 /* SpeciesDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC44F171AA3753700F69B53 /* SpeciesDetailViewController.swift */; };
 		CFE4B7D61A98DF8900DB16AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7D51A98DF8900DB16AF /* AppDelegate.swift */; };
 		CFE4B7D81A98DF8900DB16AF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7D71A98DF8900DB16AF /* ViewController.swift */; };
@@ -32,6 +33,7 @@
 /* Begin PBXFileReference section */
 		B6CA6A9D6233A0BF23A96829 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8D8AE3F2A5B7740C8243ED1 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		CFC2AB011AAC85D6002E12F1 /* DuckDuckGoSearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DuckDuckGoSearchController.swift; sourceTree = "<group>"; };
 		CFC44F171AA3753700F69B53 /* SpeciesDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeciesDetailViewController.swift; sourceTree = "<group>"; };
 		CFE4B7D01A98DF8900DB16AF /* SwiftRest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftRest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFE4B7D41A98DF8900DB16AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				CFE4B7D91A98DF8900DB16AF /* Main.storyboard */,
 				CFC44F171AA3753700F69B53 /* SpeciesDetailViewController.swift */,
 				CFE4B7F81A99FD3000DB16AF /* StarWarsSpecies.swift */,
+				CFC2AB011AAC85D6002E12F1 /* DuckDuckGoSearchController.swift */,
 				CFE4B7DC1A98DF8900DB16AF /* Images.xcassets */,
 				CFE4B7DE1A98DF8900DB16AF /* LaunchScreen.xib */,
 				CFE4B7D31A98DF8900DB16AF /* Supporting Files */,
@@ -298,6 +301,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFC2AB021AAC85D6002E12F1 /* DuckDuckGoSearchController.swift in Sources */,
 				CFE4B7D81A98DF8900DB16AF /* ViewController.swift in Sources */,
 				CFE4B7D61A98DF8900DB16AF /* AppDelegate.swift in Sources */,
 				CFE82FD01AAB3DB2001A12F1 /* StringArrayConvertible.swift in Sources */,
