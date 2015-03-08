@@ -61,4 +61,57 @@ The results look like the following and includes an image:
 
 import Foundation
 import Alamofire
+import SwiftyJSONextension Alamofire.Request {
 import SwiftyJSON
+
+
+class duckDuckGoSearchController
+{
+
+}
+
+let IMAGE_KEY = "Image"
+let SOURCE_KEY = "AbstractSource"
+let ATTRIBUTION_KEY = "AbstractURL"
+
+extension Alamofire.Request {
+  // single species
+  class func imageURLResponseSerializer() -> Serializer {
+    return { request, response, data in
+      // pull out the image element from the JSON, if there is one
+      if data == nil {
+        return (nil, nil)
+      }
+      
+      var jsonError: NSError?
+      let jsonData:AnyObject? = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &jsonError)
+      if jsonError != nil
+      {
+        println(jsonError)
+        return (nil, jsonError)
+      }
+      let json = JSON(jsonData!)
+      if json.error != nil
+      {
+        println(json.error)
+        return (nil, json.error)
+      }
+      if json == nil
+      {
+        return (nil, nil)
+      }
+      let imageURL = json[IMAGE_KEY].string
+      let source = json[SOURCE_KEY].string
+      let attribution = json[ATTRIBUTION_KEY].string
+      let result = ImageSearchResult(anImageURL: imageURL, aSource: source, anAttributionURL: attribution)
+      return (result, nil)
+    }
+  }
+  
+  func responseDuckDuckGoImageURL(completionHandler: (NSURLRequest, NSHTTPURLResponse?, ImageSearchResult?, NSError?) -> Void) -> Self {
+    return response(serializer: Request.imageURLResponseSerializer(), completionHandler: { (request, response, result, error) in
+      completionHandler(request, response, result as? ImageSearchResult, error)
+    })
+  }
+  
+}
