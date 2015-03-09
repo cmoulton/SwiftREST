@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
   var species:Array<StarWarsSpecies>?
   var speciesWrapper:SpeciesWrapper? // holds the last wrapper that we've loaded
   var isLoadingSpecies = false
+  var imageCache: Dictionary<String, ImageSearchResult?>?
   
   @IBOutlet weak var tableview: UITableView?
   
@@ -20,6 +22,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    imageCache = Dictionary<String, ImageSearchResult>()
     
     self.loadFirstSpecies()
   }
@@ -92,7 +96,49 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     {
       let species = self.species![indexPath.row]
       cell.textLabel?.text = species.name
-      cell.detailTextLabel?.text = species.classification
+      cell.detailTextLabel?.text = " " // if it's empty or nil it won't update correctly in iOS 8, see http://stackoverflow.com/questions/25793074/subtitles-of-uitableviewcell-wont-update
+      cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
+      cell.imageView?.image = nil
+      if let name = species.name {
+        // TODO: need thread safety here
+        // check the cache first
+        if let cachedImageResult = imageCache![name]
+        {
+          // TODO: custom cell with class assigned
+          cell.imageView?.image = cachedImageResult!.image // will work fine even if image is nil
+          if let attribution = cachedImageResult?.fullAttribution()
+          {
+            if attribution.isEmpty == false
+            {
+              cell.detailTextLabel?.text = attribution
+            }
+          }
+        }
+        else
+        {
+          // didn't find it, so pull it down from the web
+          // this isn't ideal since it will keep running even if the cell scrolls off of the screen
+          // if we had lots of cells we'd want to stop this process when the cell gets reused
+          duckDuckGoSearchController.imageFromSearchString(name, completionHandler: {
+            (imageSearchResult, error) in
+            if error != nil {
+              println(error)
+            }
+            // TODO: persist cache between runs
+            self.imageCache![name] = imageSearchResult
+            if let cellToUpdate = self.tableview?.cellForRowAtIndexPath(indexPath)
+            {
+              if cellToUpdate.imageView?.image == nil
+              {
+                cellToUpdate.imageView?.image = imageSearchResult?.image // will work fine even if image is nil
+                cellToUpdate.detailTextLabel?.text = imageSearchResult?.fullAttribution()
+                cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+              }
+            }
+          })
+        }
+      }
+
       
       // See if we need to load more species
       let rowsToLoadFromBottom = 5;
