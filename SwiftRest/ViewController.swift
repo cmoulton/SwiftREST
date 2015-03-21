@@ -100,11 +100,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
       cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
       cell.imageView?.image = nil
       if let name = species.name {
-        // TODO: need thread safety here
         // check the cache first
         if let cachedImageResult = imageCache![name]
         {
-          // TODO: custom cell with class assigned
+          // TODO: custom cell with class assigned for custom view?
           cell.imageView?.image = cachedImageResult!.image // will work fine even if image is nil
           if let attribution = cachedImageResult?.fullAttribution()
           {
@@ -139,7 +138,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
       }
 
-      
       // See if we need to load more species
       let rowsToLoadFromBottom = 5;
       let rowsLoaded = self.species!.count
@@ -156,11 +154,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     return cell
   }
-  
-  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     
-  }
-  
   // MARK: Segue
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     super.prepareForSegue(segue, sender: sender)
