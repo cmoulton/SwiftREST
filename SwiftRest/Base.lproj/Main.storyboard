@@ -20,6 +20,14 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="uwV-zy-fRP">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <searchBar key="tableHeaderView" contentMode="redraw" id="zTI-Lh-PnY">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                    <textInputTraits key="textInputTraits"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="ItE-M3-feb" id="312-Y3-R6I"/>
+                                    </connections>
+                                </searchBar>
                                 <view key="tableFooterView" contentMode="scaleToFill" id="bPd-il-CYB">
                                     <rect key="frame" x="0.0" y="66" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -76,10 +84,20 @@
                     <navigationItem key="navigationItem" id="CoW-lL-vDT"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="searchDisplayController" destination="3yR-MK-e8u" id="QO9-lb-mGb"/>
                         <outlet property="tableview" destination="uwV-zy-fRP" id="Bab-Fi-caK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XAS-sR-EKv" sceneMemberID="firstResponder"/>
+                <searchDisplayController id="3yR-MK-e8u">
+                    <connections>
+                        <outlet property="delegate" destination="ItE-M3-feb" id="vsH-Cv-tbO"/>
+                        <outlet property="searchBar" destination="zTI-Lh-PnY" id="jOd-zw-di5"/>
+                        <outlet property="searchContentsController" destination="ItE-M3-feb" id="Tbl-UM-n9Y"/>
+                        <outlet property="searchResultsDataSource" destination="ItE-M3-feb" id="mEw-Mc-pPy"/>
+                        <outlet property="searchResultsDelegate" destination="ItE-M3-feb" id="WrE-cq-xT3"/>
+                    </connections>
+                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1881" y="167"/>
         </scene>
