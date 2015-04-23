@@ -9,12 +9,14 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,UISearchBarDelegate, UISearchDisplayDelegate {
 
   var species:Array<StarWarsSpecies>?
   var speciesWrapper:SpeciesWrapper? // holds the last wrapper that we've loaded
   var isLoadingSpecies = false
   var imageCache: Dictionary<String, ImageSearchResult?>?
+  
+  var speciesSearchResults:Array<StarWarsSpecies>?
   
   @IBOutlet weak var tableview: UITableView?
   
