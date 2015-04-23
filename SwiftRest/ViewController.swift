@@ -88,15 +88,26 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   // MARK: TableViewDataSource
   
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    if tableView == self.searchDisplayController!.searchResultsTableView {
+      return self.speciesSearchResults?.count ?? 0
+    } else {
     return self.species?.count ?? 0
+  }
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+    var cell = self.tableview!.dequeueReusableCellWithIdentifier("Cell") as UITableViewCell
     
-    if self.species != nil && self.species!.count >= indexPath.row
+    var arrayOfSpecies:Array<StarWarsSpecies>?
+    if tableView == self.searchDisplayController!.searchResultsTableView {
+      arrayOfSpecies = self.speciesSearchResults
+    } else {
+      arrayOfSpecies = self.species
+    }
+    
+    if arrayOfSpecies != nil && arrayOfSpecies!.count >= indexPath.row
     {
-      let species = self.species![indexPath.row]
+      let species = arrayOfSpecies![indexPath.row]
       cell.textLabel?.text = species.name
       cell.detailTextLabel?.text = " " // if it's empty or nil it won't update correctly in iOS 8, see http://stackoverflow.com/questions/25793074/subtitles-of-uitableviewcell-wont-update
       cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
@@ -140,6 +151,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         }
       }
 
+      if tableView != self.searchDisplayController!.searchResultsTableView {
       // See if we need to load more species
       let rowsToLoadFromBottom = 5;
       let rowsLoaded = self.species!.count
@@ -152,6 +164,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
           self.loadMoreSpecies()
         }
       }
+    }
     }
     
     return cell
