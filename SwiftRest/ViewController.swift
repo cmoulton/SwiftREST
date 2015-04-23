@@ -175,9 +175,15 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     super.prepareForSegue(segue, sender: sender)
     if let speciesDetailVC = segue.destinationViewController as? SpeciesDetailViewController
     {
+        // gotta check if we're currently searching
+        if self.searchDisplayController!.active {
+          let indexPath = self.searchDisplayController?.searchResultsTableView.indexPathForSelectedRow()
+          if indexPath != nil {
+            speciesDetailVC.species = self.speciesSearchResults?[indexPath!.row]
+          }
+        } else {
       let indexPath = self.tableview?.indexPathForSelectedRow()
-      if indexPath != nil
-      {
+          if indexPath != nil {
         speciesDetailVC.species = self.species?[indexPath!.row]
       }
     }
