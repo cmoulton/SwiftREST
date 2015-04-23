@@ -91,8 +91,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     if tableView == self.searchDisplayController!.searchResultsTableView {
       return self.speciesSearchResults?.count ?? 0
     } else {
-    return self.species?.count ?? 0
-  }
+      return self.species?.count ?? 0
+    }
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -152,19 +152,19 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
       }
 
       if tableView != self.searchDisplayController!.searchResultsTableView {
-      // See if we need to load more species
-      let rowsToLoadFromBottom = 5;
-      let rowsLoaded = self.species!.count
-      if (!self.isLoadingSpecies && (indexPath.row >= (rowsLoaded - rowsToLoadFromBottom)))
-      {
-        let totalRows = self.speciesWrapper!.count!
-        let remainingSpeciesToLoad = totalRows - rowsLoaded;
-        if (remainingSpeciesToLoad > 0)
+        // See if we need to load more species
+        let rowsToLoadFromBottom = 5;
+        let rowsLoaded = self.species!.count
+        if (!self.isLoadingSpecies && (indexPath.row >= (rowsLoaded - rowsToLoadFromBottom)))
         {
-          self.loadMoreSpecies()
+          let totalRows = self.speciesWrapper!.count!
+          let remainingSpeciesToLoad = totalRows - rowsLoaded;
+          if (remainingSpeciesToLoad > 0)
+          {
+            self.loadMoreSpecies()
+          }
         }
       }
-    }
     }
     
     return cell
@@ -182,13 +182,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
             speciesDetailVC.species = self.speciesSearchResults?[indexPath!.row]
           }
         } else {
-      let indexPath = self.tableview?.indexPathForSelectedRow()
+          let indexPath = self.tableview?.indexPathForSelectedRow()
           if indexPath != nil {
-        speciesDetailVC.species = self.species?[indexPath!.row]
-      }
+            speciesDetailVC.species = self.species?[indexPath!.row]
+          }
+        }
     }
   }
-}
   
   // MARK: Search
   func filterContentForSearchText(searchText: String) {
