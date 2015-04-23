@@ -170,3 +170,24 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
   }
 }
+  
+  // MARK: Search
+  func filterContentForSearchText(searchText: String) {
+    // Filter the array using the filter method
+    if self.species == nil {
+      self.speciesSearchResults = nil
+      return
+    }
+    self.speciesSearchResults = self.species!.filter({( aSpecies: StarWarsSpecies) -> Bool in
+      // to start, let's just search by name
+      return aSpecies.name!.rangeOfString(searchText) != nil
+    })
+  }
+  
+  func searchDisplayController(controller: UISearchDisplayController!, shouldReloadTableForSearchString searchString: String!) -> Bool {
+    self.filterContentForSearchText(searchString)
+    return true
+  }
+
+  
+}
