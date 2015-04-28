@@ -9,7 +9,7 @@
 import UIKit
 import Alamofire
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate,UISearchBarDelegate, UISearchDisplayDelegate {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UISearchDisplayDelegate {
 
   var species:Array<StarWarsSpecies>?
   var speciesWrapper:SpeciesWrapper? // holds the last wrapper that we've loaded
@@ -199,7 +199,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     self.speciesSearchResults = self.species!.filter({( aSpecies: StarWarsSpecies) -> Bool in
       // to start, let's just search by name
-      return aSpecies.name!.rangeOfString(searchText) != nil
+      return aSpecies.name!.lowercaseString.rangeOfString(searchText.lowercaseString) != nil
     })
   }
   
