@@ -191,22 +191,43 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   }
   
   // MARK: Search
-  func filterContentForSearchText(searchText: String) {
+  func filterContentForSearchText(searchText: String, scope: Int) {
     // Filter the array using the filter method
     if self.species == nil {
       self.speciesSearchResults = nil
       return
     }
     self.speciesSearchResults = self.species!.filter({( aSpecies: StarWarsSpecies) -> Bool in
-      // to start, let's just search by name
-      return aSpecies.name!.lowercaseString.rangeOfString(searchText.lowercaseString) != nil
+      // pick the field to search
+      var fieldToSearch: String?
+      switch (scope) {
+        case (0):
+          fieldToSearch = aSpecies.name
+        case (1):
+          fieldToSearch = aSpecies.language
+        case (2):
+          fieldToSearch = aSpecies.classification
+        default:
+          fieldToSearch = nil
+      }
+      if fieldToSearch == nil {
+        self.speciesSearchResults = nil
+        return false
+      }
+      return fieldToSearch!.lowercaseString.rangeOfString(searchText.lowercaseString) != nil
     })
   }
   
   func searchDisplayController(controller: UISearchDisplayController!, shouldReloadTableForSearchString searchString: String!) -> Bool {
-    self.filterContentForSearchText(searchString)
+    let selectedIndex = controller.searchBar.selectedScopeButtonIndex
+    self.filterContentForSearchText(searchString, scope: selectedIndex)
+    return true
+  }
+  
+  func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchScope searchOption: Int) -> Bool {
+    let searchString = controller.searchBar.text
+    self.filterContentForSearchText(searchString, scope:searchOption)
     return true
   }
 
-  
 }
