@@ -96,7 +96,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    var cell = self.tableview!.dequeueReusableCellWithIdentifier("Cell") as UITableViewCell
+    var cell = self.tableview!.dequeueReusableCellWithIdentifier("Cell") as! UITableViewCell
     
     var arrayOfSpecies:Array<StarWarsSpecies>?
     if tableView == self.searchDisplayController!.searchResultsTableView {
@@ -218,7 +218,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     })
   }
   
-  func searchDisplayController(controller: UISearchDisplayController!, shouldReloadTableForSearchString searchString: String!) -> Bool {
+  func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchString searchString: String!) -> Bool {
     let selectedIndex = controller.searchBar.selectedScopeButtonIndex
     self.filterContentForSearchText(searchString, scope: selectedIndex)
     return true
