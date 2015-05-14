@@ -90,7 +90,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
     
     if self.species != nil && self.species!.count >= indexPath.row
     {
@@ -158,13 +158,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   // MARK: Segue
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     super.prepareForSegue(segue, sender: sender)
-    if let speciesDetailVC = segue.destinationViewController as? SpeciesDetailViewController
+    if let speciesDetailVC = segue.destinationViewController as? SpeciesDetailViewController, indexPath = self.tableview?.indexPathForSelectedRow()
     {
-      let indexPath = self.tableview?.indexPathForSelectedRow()
-      if indexPath != nil
-      {
-        speciesDetailVC.species = self.species?[indexPath!.row]
-      }
+      speciesDetailVC.species = self.species?[indexPath.row]
     }
   }
 }
