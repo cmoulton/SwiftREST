@@ -125,7 +125,10 @@ class duckDuckGoSearchController
               completionHandler(imageURLResult, nil)
               return
             }
-            imageURLResult?.image = UIImage(data: data! as NSData)
+            if let imageData = data as? NSData
+            {
+              imageURLResult?.image = UIImage(data: imageData)
+            }
             completionHandler(imageURLResult, nil)
         }
     }
