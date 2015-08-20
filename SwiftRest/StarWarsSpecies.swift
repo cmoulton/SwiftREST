@@ -2,48 +2,40 @@
 //  StarWarsSpecies.swift
 //  SwiftRest
 //
-//  Created by Christina Moulton on 2015-02-22.
+//  Created by Christina Moulton on 2015-08-20.
 //  Copyright (c) 2015 Teak Mobile Inc. All rights reserved.
 //
 
-/* API Response to http http://swapi.co/api/species/3/ looks like:
+/* API response to http://swapi.co/api/species/3 looks like:
+
+>>>>>>> Swift1.2_REST_Tableview
 {
-  "name": "Wookiee",
-  "classification": "mammal",
-  "designation": "sentient",
-  "average_height": "210",
-  "skin_colors": "gray",
-  "hair_colors": "black, brown",
-  "eye_colors": "blue, green, yellow, brown, golden, red",
-  "average_lifespan": "400",
-  "homeworld": "http://swapi.co/api/planets/14/",
-  "language": "Shyriiwook",
-  "people": [
-  "http://swapi.co/api/people/13/",
-  "http://swapi.co/api/people/80/"
-  ],
-  "films": [
-  "http://swapi.co/api/films/1/",
-  "http://swapi.co/api/films/2/",
-  "http://swapi.co/api/films/3/",
-  "http://swapi.co/api/films/6/"
-  ],
-  "created": "2014-12-10T16:44:31.486000Z",
-  "edited": "2015-01-30T21:23:03.074598Z",
-  "url": "http://swapi.co/api/species/3/"
+"average_height": "2.1",
+"average_lifespan": "400",
+"classification": "Mammal",
+"created": "2014-12-10T16:44:31.486000Z",
+"designation": "Sentient",
+"edited": "2014-12-10T16:44:31.486000Z",
+"eye_colors": "blue, green, yellow, brown, golden, red",
+"hair_colors": "black, brown",
+"homeworld": "http://swapi.co/api/planets/14/",
+"language": "Shyriiwook",
+"name": "Wookie",
+"people": [
+"http://swapi.co/api/people/13/"
+],
+"films": [
+"http://swapi.co/api/films/1/",
+"http://swapi.co/api/films/2/"
+],
+"skin_colors": "gray",
+"url": "http://swapi.co/api/species/3/"
 }
 */
 
 import Foundation
 import Alamofire
 import SwiftyJSON
-
-class SpeciesWrapper {
-  var species: Array<StarWarsSpecies>?
-  var count: Int?
-  private var next: String?
-  private var previous: String?
-}
 
 enum SpeciesFields: String {
   case Name = "name"
@@ -61,6 +53,13 @@ enum SpeciesFields: String {
   case Created = "created"
   case Edited = "edited"
   case Url = "url"
+}
+
+class SpeciesWrapper {
+  var species: Array<StarWarsSpecies>?
+  var count: Int?
+  private var next: String?
+  private var previous: String?
 }
 
 class StarWarsSpecies {
@@ -144,6 +143,8 @@ class StarWarsSpecies {
     {
       self.edited = dateFormatter.dateFromString(dateString)
     }
+    
+    self.averageHeight = json[SpeciesFields.AverageHeight.rawValue].int
   }
   
   class func dateFormatter() -> NSDateFormatter {
@@ -154,30 +155,12 @@ class StarWarsSpecies {
     aDateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
     return aDateFormatter
   }
-
+  
   // MARK: Endpoints
-  class func endpointForID(id: Int) -> String {
-    return "http://swapi.co/api/species/\(id)"
-  }
   class func endpointForSpecies() -> String {
     return "http://swapi.co/api/species/"
   }
   
-  // MARK: CRUD
-  // GET / Read single species
-  class func speciesByID(id: Int, completionHandler: (StarWarsSpecies?, NSError?) -> Void) {
-    Alamofire.request(.GET, StarWarsSpecies.endpointForID(id))
-      .responseSpecies { (request, response, species, error) in
-        if let anError = error
-        {
-          completionHandler(nil, error)
-          return
-        }
-        completionHandler(species, nil)
-    }
-  }
-  
-  // GET / Read all species
   private class func getSpeciesAtPath(path: String, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
     Alamofire.request(.GET, path)
       .responseSpeciesArray { (request, response, speciesWrapper, error) in
@@ -194,6 +177,7 @@ class StarWarsSpecies {
     getSpeciesAtPath(StarWarsSpecies.endpointForSpecies(), completionHandler: completionHandler)
   }
   
+  
   class func getMoreSpecies(wrapper: SpeciesWrapper?, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
     if wrapper == nil || wrapper?.next == nil
     {
@@ -202,83 +186,47 @@ class StarWarsSpecies {
     }
     getSpeciesAtPath(wrapper!.next!, completionHandler: completionHandler)
   }
-  
 }
 
 extension Alamofire.Request {
-  // single species
-  class func speciesResponseSerializer() -> Serializer {
-    return { request, response, data in
-      println(data)
-      if data == nil {
-        return (nil, nil)
-      }
-      
-      var jsonError: NSError?
-      let jsonData:AnyObject? = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &jsonError)
-      let json = JSON(jsonData!)
-      if json.error != nil
-      {
-        println(json.error)
-        return (nil, json.error)
-      }
-      if json == nil
-      {
-        return (nil, nil)
-      }
-      let species = StarWarsSpecies(json: json, id: nil)
-      return (species, nil)
-    }
-  }
-  
-  func responseSpecies(completionHandler: (NSURLRequest, NSHTTPURLResponse?, StarWarsSpecies?, NSError?) -> Void) -> Self {
-    return response(serializer: Request.speciesResponseSerializer(), completionHandler: { (request, response, species, error) in
-      completionHandler(request, response, species as? StarWarsSpecies, error)
-    })
-  }
-  
-  // all species
-  class func speciesArrayResponseSerializer() -> Serializer {
-    return { request, response, data in
-      if data == nil {
-        return (nil, nil)
-      }
-
-      var jsonError: NSError?
-      let jsonData:AnyObject? = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &jsonError)
-      if jsonData == nil || jsonError != nil
-      {
-        return (nil, jsonError)
-      }
-      let json = JSON(jsonData!)
-      if json.error != nil || json == nil
-      {
-        return (nil, json.error)
-      }
-      
-      var wrapper:SpeciesWrapper = SpeciesWrapper()
-      wrapper.next = json["next"].stringValue
-      wrapper.previous = json["previous"].stringValue
-      wrapper.count = json["count"].intValue
-      
-      var allSpecies:Array = Array<StarWarsSpecies>()
-      println(json)
-      let results = json["results"]
-      println(results)
-      for (index, jsonSpecies) in results
-      {
-        let species = StarWarsSpecies(json: jsonSpecies, id: index.toInt())
-        allSpecies.append(species)
-      }
-      wrapper.species = allSpecies
-      return (wrapper, nil)
-    }
-  }
-  
   func responseSpeciesArray(completionHandler: (NSURLRequest, NSHTTPURLResponse?, SpeciesWrapper?, NSError?) -> Void) -> Self {
-    return response(serializer: Request.speciesArrayResponseSerializer(), completionHandler: { (request, response, speciesWrapper, error) in
-      completionHandler(request, response, speciesWrapper as? SpeciesWrapper, error)
-    })
+    let responseSerializer = GenericResponseSerializer<SpeciesWrapper> { request, response, data in
+      if let responseData = data
+      {
+        var jsonError: NSError?
+        let jsonData:AnyObject? = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &jsonError)
+        if jsonData == nil || jsonError != nil
+        {
+          return (nil, jsonError)
+        }
+        let json = JSON(jsonData!)
+        if json.error != nil || json == nil
+        {
+          return (nil, json.error)
+        }
+        
+        var wrapper:SpeciesWrapper = SpeciesWrapper()
+        wrapper.next = json["next"].stringValue
+        wrapper.previous = json["previous"].stringValue
+        wrapper.count = json["count"].intValue
+        
+        var allSpecies:Array = Array<StarWarsSpecies>()
+        println(json)
+        let results = json["results"]
+        println(results)
+        for jsonSpecies in results
+        {
+          println(jsonSpecies.1)
+          let species = StarWarsSpecies(json: jsonSpecies.1, id: jsonSpecies.0.toInt())
+          allSpecies.append(species)
+        }
+        wrapper.species = allSpecies
+        return (wrapper, nil)
+      }
+      return (nil, nil)
+    }
+    
+    return response(responseSerializer: responseSerializer,
+      completionHandler: completionHandler)
   }
-  
 }

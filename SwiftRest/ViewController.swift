@@ -2,29 +2,24 @@
 //  ViewController.swift
 //  AlamofireDemo
 //
-//  Created by Christina Moulton on 2015-02-11.
+//  Created by Christina Moulton on 2015-08-20.
 //  Copyright (c) 2015 Teak Mobile Inc. All rights reserved.
 //
 
 import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
   var species:Array<StarWarsSpecies>?
   var speciesWrapper:SpeciesWrapper? // holds the last wrapper that we've loaded
   var isLoadingSpecies = false
   
   @IBOutlet weak var tableview: UITableView?
   
-  // MARK: Lifecycle
-  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     self.loadFirstSpecies()
   }
-  
-  // MARK: Loading Species from API
   
   func loadFirstSpecies()
   {
@@ -34,7 +29,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
       {
         // TODO: improved error handling
         self.isLoadingSpecies = false
-        var alert = UIAlertController(title: "Error", message: "Could not load first species :( \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
+        var alert = UIAlertController(title: "Error", message: "Could not load first species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
       }
@@ -55,7 +50,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         {
           // TODO: improved error handling
           self.isLoadingSpecies = false
-          var alert = UIAlertController(title: "Error", message: "Could not load more species :( \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
+          var alert = UIAlertController(title: "Error", message: "Could not load more species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
           alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
           self.presentViewController(alert, animated: true, completion: nil)
         }
@@ -80,8 +75,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
   }
   
-  // MARK: TableViewDataSource
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
   
+  // MARK: Tableview Delegate / Data Source
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return self.species?.count ?? 0
   }
@@ -112,11 +111,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     return cell
   }
   
-  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    
-  }
-  
-  // alternate row colors
   func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
     if indexPath.row % 2 == 0
     {
@@ -141,3 +135,4 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
   }
 }
+
