@@ -31,7 +31,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
       {
         // TODO: improved error handling
         self.isLoadingSpecies = false
-        var alert = UIAlertController(title: "Error", message: "Could not load first species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: "Error", message: "Could not load first species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
       }
@@ -52,11 +52,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         {
           // TODO: improved error handling
           self.isLoadingSpecies = false
-          var alert = UIAlertController(title: "Error", message: "Could not load more species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
+          let alert = UIAlertController(title: "Error", message: "Could not load more species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
           alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
           self.presentViewController(alert, animated: true, completion: nil)
         }
-        println("got more!")
+        print("got more!")
         self.addSpeciesFromWrapper(moreWrapper)
         self.isLoadingSpecies = false
         self.tableview?.reloadData()
@@ -92,7 +92,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
     
     if self.species != nil && self.species!.count >= indexPath.row
     {
