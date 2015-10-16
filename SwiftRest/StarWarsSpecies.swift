@@ -80,7 +80,7 @@ class StarWarsSpecies {
   var url: String?
   
   required init(json: JSON, id: Int?) {
-    println(json)
+    print(json)
     self.idNumber = id
     self.name = json[SpeciesFields.Name.rawValue].stringValue
     self.classification = json[SpeciesFields.Classification.rawValue].stringValue
@@ -96,20 +96,19 @@ class StarWarsSpecies {
   
   private class func getSpeciesAtPath(path: String, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
     Alamofire.request(.GET, path)
-      .responseSpeciesArray { (request, response, speciesWrapper, error) in
-        if let anError = error
+      .responseSpeciesArray { response in
+        if let error = response.result.error
         {
           completionHandler(nil, error)
           return
         }
-        completionHandler(speciesWrapper, nil)
+        completionHandler(response.result.value, nil)
     }
   }
   
   class func getSpecies(completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
     getSpeciesAtPath(StarWarsSpecies.endpointForSpecies(), completionHandler: completionHandler)
   }
-  
   
   class func getMoreSpecies(wrapper: SpeciesWrapper?, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
     if wrapper == nil || wrapper?.next == nil
@@ -122,41 +121,43 @@ class StarWarsSpecies {
 }
 
 extension Alamofire.Request {
-  func responseSpeciesArray(completionHandler: (NSURLRequest, NSHTTPURLResponse?, SpeciesWrapper?, NSError?) -> Void) -> Self {
-    let responseSerializer = GenericResponseSerializer<SpeciesWrapper> { request, response, data in
-      if let responseData = data
-      {
-        var jsonError: NSError?
-        let jsonData:AnyObject? = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &jsonError)
-        if jsonData == nil || jsonError != nil
-        {
-          return (nil, jsonError)
-        }
-        let json = JSON(jsonData!)
-        if json.error != nil || json == nil
-        {
-          return (nil, json.error)
-        }
-        
-        var wrapper:SpeciesWrapper = SpeciesWrapper()
+  func responseSpeciesArray(completionHandler: Response<SpeciesWrapper, NSError> -> Void) -> Self {
+    let responseSerializer = ResponseSerializer<SpeciesWrapper, NSError> { request, response, data, error in
+      guard error == nil else {
+        return .Failure(error!)
+      }
+      guard let responseData = data else {
+        let failureReason = "Array could not be serialized because input data was nil."
+        let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
+        return .Failure(error)
+      }
+      
+      let JSONResponseSerializer = Request.JSONResponseSerializer(options: .AllowFragments)
+      let result = JSONResponseSerializer.serializeResponse(request, response, responseData, error)
+      
+      switch result {
+      case .Success(let value):
+        let json = SwiftyJSON.JSON(value)
+        let wrapper = SpeciesWrapper()
         wrapper.next = json["next"].stringValue
         wrapper.previous = json["previous"].stringValue
         wrapper.count = json["count"].intValue
         
         var allSpecies:Array = Array<StarWarsSpecies>()
-        println(json)
+        print(json)
         let results = json["results"]
-        println(results)
+        print(results)
         for jsonSpecies in results
         {
-          println(jsonSpecies.1)
-          let species = StarWarsSpecies(json: jsonSpecies.1, id: jsonSpecies.0.toInt())
+          print(jsonSpecies.1)
+          let species = StarWarsSpecies(json: jsonSpecies.1, id: Int(jsonSpecies.0))
           allSpecies.append(species)
         }
         wrapper.species = allSpecies
-        return (wrapper, nil)
+        return .Success(wrapper)
+      case .Failure(let error):
+        return .Failure(error)
       }
-      return (nil, nil)
     }
     
     return response(responseSerializer: responseSerializer,
