@@ -91,7 +91,7 @@ class StarWarsSpecies {
   
   // MARK: Endpoints
   class func endpointForSpecies() -> String {
-    return "http://swapi.co/api/species/"
+    return "https://swapi.co/api/species/"
   }
   
   private class func getSpeciesAtPath(path: String, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
