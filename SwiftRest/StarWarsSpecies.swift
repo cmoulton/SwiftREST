@@ -158,28 +158,33 @@ class StarWarsSpecies {
   
   // MARK: Endpoints
   class func endpointForSpecies() -> String {
-    return "http://swapi.co/api/species/"
+    return "https://swapi.co/api/species/"
   }
   
-  private class func getSpeciesAtPath(path: String, completionHandler: (Result<SpeciesWrapper, NSError>) -> Void) {
+  private class func getSpeciesAtPath(path: String, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
     Alamofire.request(.GET, path)
       .responseSpeciesArray { response in
-        return response.result
+        if let error = response.result.error
+        {
+          completionHandler(nil, error)
+          return
+        }
+        completionHandler(response.result.value, nil)
     }
   }
   
-  class func getSpecies(completionHandler: (Result<SpeciesWrapper, NSError>) -> Void) {
+  class func getSpecies(completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
     getSpeciesAtPath(StarWarsSpecies.endpointForSpecies(), completionHandler: completionHandler)
   }
   
-  
-  class func getMoreSpecies(wrapper: SpeciesWrapper?, completionHandler: (Result<SpeciesWrapper, NSError>) -> Void) -> Bool {
-    if wrapper == nil || wrapper?.next == nil
-    {
-      return false
+  class func getMoreSpecies(wrapper: SpeciesWrapper?, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
+    guard var nextURLString = wrapper?.next else {
+      completionHandler(nil, nil)
+      return
     }
-    getSpeciesAtPath(wrapper!.next!, completionHandler: completionHandler)
-    return true
+    // iOS9: Change HTTP to HTTPS
+    nextURLString = nextURLString.lowercaseString.stringByReplacingOccurrencesOfString("http:", withString: "https:")
+    getSpeciesAtPath(nextURLString, completionHandler: completionHandler)
   }
 }
 

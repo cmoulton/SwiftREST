@@ -24,8 +24,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   func loadFirstSpecies()
   {
     isLoadingSpecies = true
-    StarWarsSpecies.getSpecies({ result in
-      if let error = result.error
+    StarWarsSpecies.getSpecies { wrapper, error in
+      if let error = error
       {
         // TODO: improved error handling
         self.isLoadingSpecies = false
@@ -33,10 +33,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
       }
-      self.addSpeciesFromWrapper(result.value)
+      self.addSpeciesFromWrapper(wrapper)
       self.isLoadingSpecies = false
       self.tableview?.reloadData()
-    })
+    }
   }
   
   func loadMoreSpecies()
@@ -45,8 +45,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     if self.species != nil && self.speciesWrapper != nil && self.species!.count < self.speciesWrapper!.count
     {
       // there are more species out there!
-      let canLoadMore = StarWarsSpecies.getMoreSpecies(self.speciesWrapper, completionHandler: { result in
-        if let error = result.error
+      StarWarsSpecies.getMoreSpecies(self.speciesWrapper, completionHandler: { wrapper, error in
+        if let error = error
         {
           // TODO: improved error handling
           self.isLoadingSpecies = false
@@ -55,13 +55,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
           self.presentViewController(alert, animated: true, completion: nil)
         }
         print("got more!")
-        self.addSpeciesFromWrapper(result.value)
+        self.addSpeciesFromWrapper(wrapper)
         self.isLoadingSpecies = false
         self.tableview?.reloadData()
       })
-      if canLoadMore == false {
-        self.isLoadingSpecies = false
-      }
     }
   }
   
@@ -102,11 +99,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
       let rowsLoaded = self.species!.count
       if (!self.isLoadingSpecies && (indexPath.row >= (rowsLoaded - rowsToLoadFromBottom)))
       {
-        let totalRows = self.speciesWrapper!.count!
-        let remainingSpeciesToLoad = totalRows - rowsLoaded;
-        if (remainingSpeciesToLoad > 0)
-        {
-          self.loadMoreSpecies()
+        if let totalRows = self.speciesWrapper?.count {
+          let remainingSpeciesToLoad = totalRows - rowsLoaded;
+          if (remainingSpeciesToLoad > 0)
+          {
+            self.loadMoreSpecies()
+          }
         }
       }
     }
