@@ -210,10 +210,8 @@ extension Alamofire.Request {
         print(json)
         let results = json["results"]
         print(results)
-        for jsonSpecies in results
-        {
-          print(jsonSpecies.1)
-          let species = StarWarsSpecies(json: jsonSpecies.1, id: Int(jsonSpecies.0))
+        for (index, jsonSpecies) in results {
+          let species = StarWarsSpecies(json: jsonSpecies, id: Int(index))
           allSpecies.append(species)
         }
         wrapper.species = allSpecies
