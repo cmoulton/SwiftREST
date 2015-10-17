@@ -128,12 +128,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   // MARK: Segue
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     super.prepareForSegue(segue, sender: sender)
-    if let speciesDetailVC = segue.destinationViewController as? SpeciesDetailViewController
-    {
-      let indexPath = self.tableview?.indexPathForSelectedRow
-      if indexPath != nil
-      {
-        speciesDetailVC.species = self.species?[indexPath!.row]
+    if let speciesDetailVC = segue.destinationViewController as? SpeciesDetailViewController {
+      if let indexPath = self.tableview?.indexPathForSelectedRow {
+        speciesDetailVC.species = self.species?[indexPath.row]
       }
     }
   }
