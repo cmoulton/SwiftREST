@@ -24,16 +24,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   func loadFirstSpecies()
   {
     isLoadingSpecies = true
-    StarWarsSpecies.getSpecies({ (speciesWrapper, error) in
-      if error != nil
+    StarWarsSpecies.getSpecies({ result in
+      if let error = result.error
       {
         // TODO: improved error handling
         self.isLoadingSpecies = false
-        var alert = UIAlertController(title: "Error", message: "Could not load first species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: "Error", message: "Could not load first species \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
       }
-      self.addSpeciesFromWrapper(speciesWrapper)
+      self.addSpeciesFromWrapper(result.value)
       self.isLoadingSpecies = false
       self.tableview?.reloadData()
     })
@@ -45,20 +45,23 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     if self.species != nil && self.speciesWrapper != nil && self.species!.count < self.speciesWrapper!.count
     {
       // there are more species out there!
-      StarWarsSpecies.getMoreSpecies(self.speciesWrapper, completionHandler: { (moreWrapper, error) in
-        if error != nil
+      let canLoadMore = StarWarsSpecies.getMoreSpecies(self.speciesWrapper, completionHandler: { result in
+        if let error = result.error
         {
           // TODO: improved error handling
           self.isLoadingSpecies = false
-          var alert = UIAlertController(title: "Error", message: "Could not load more species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
+          let alert = UIAlertController(title: "Error", message: "Could not load more species \(error.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
           alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
           self.presentViewController(alert, animated: true, completion: nil)
         }
-        println("got more!")
-        self.addSpeciesFromWrapper(moreWrapper)
+        print("got more!")
+        self.addSpeciesFromWrapper(result.value)
         self.isLoadingSpecies = false
         self.tableview?.reloadData()
       })
+      if canLoadMore == false {
+        self.isLoadingSpecies = false
+      }
     }
   }
   
@@ -86,7 +89,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! UITableViewCell
+    let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
     
     if self.species != nil && self.species!.count >= indexPath.row
     {
@@ -127,7 +130,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     super.prepareForSegue(segue, sender: sender)
     if let speciesDetailVC = segue.destinationViewController as? SpeciesDetailViewController
     {
-      let indexPath = self.tableview?.indexPathForSelectedRow()
+      let indexPath = self.tableview?.indexPathForSelectedRow
       if indexPath != nil
       {
         speciesDetailVC.species = self.species?[indexPath!.row]

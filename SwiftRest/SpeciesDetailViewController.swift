@@ -43,23 +43,23 @@ class SpeciesDetailViewController: UIViewController {
       
       if let height = self.species!.averageHeight
       {
-        self.descriptionLabel!.text! += "The \(self.species!.name!) can be identified by their height, typically \(self.species!.averageHeight!)cm."
+        self.descriptionLabel!.text! += "The \(self.species!.name!) can be identified by their height, typically \(height)cm."
       }
       
       var eyeColors:String?
       if let colors = self.species!.eyeColors
       {
-        eyeColors = ", ".join(colors)
+        eyeColors = colors.joinWithSeparator(" or ")
       }
       var skinColors:String?
       if let colors = self.species!.skinColors
       {
-        skinColors = ", ".join(colors)
+        skinColors = colors.joinWithSeparator(", ")
       }
       var hairColors:String?
       if let colors = self.species!.hairColors
       {
-        hairColors = ", ".join(colors)
+        hairColors = colors.joinWithSeparator(", ")
       }
       
       if eyeColors != nil && skinColors != nil && hairColors != nil
@@ -72,15 +72,16 @@ class SpeciesDetailViewController: UIViewController {
     if self.species?.averageLifespan != nil
     {
       // some species have numeric lifespans (like 100) and some have lifespans like "indefinite", so we handle both by adding " years" to the numeric ones
-      self.descriptionLabel!.text! += "\n\nTheir average lifespan is \(self.species!.averageLifespan!)"
-      let years = self.species?.averageLifespan?.toInt()
-      if years != nil
-      {
-        self.descriptionLabel!.text! += " years."
-      }
-      else
-      {
-        self.descriptionLabel!.text! += "."
+      if let lifespan = self.species?.averageLifespan {
+        self.descriptionLabel!.text! += "\n\nTheir average lifespan is \(lifespan)"
+        let numericLifespan = Int(lifespan)
+        if numericLifespan != nil {
+          self.descriptionLabel!.text! += " years."
+        }
+        else
+        {
+          self.descriptionLabel!.text! += "."
+        }
       }
     }
     self.descriptionLabel!.sizeToFit() // to top-align text

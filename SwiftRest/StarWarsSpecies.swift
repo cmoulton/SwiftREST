@@ -81,7 +81,7 @@ class StarWarsSpecies {
   var url: String?
   
   required init(json: JSON, id: Int?) {
-    println(json)
+    print(json)
     self.idNumber = id
     
     // strings
@@ -149,7 +149,7 @@ class StarWarsSpecies {
   
   class func dateFormatter() -> NSDateFormatter {
     // TODO: reuse date formatter, they're expensive!
-    var aDateFormatter = NSDateFormatter()
+    let aDateFormatter = NSDateFormatter()
     aDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SZ"
     aDateFormatter.timeZone = NSTimeZone(abbreviation: "UTC")
     aDateFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
@@ -161,69 +161,66 @@ class StarWarsSpecies {
     return "http://swapi.co/api/species/"
   }
   
-  private class func getSpeciesAtPath(path: String, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
+  private class func getSpeciesAtPath(path: String, completionHandler: (Result<SpeciesWrapper, NSError>) -> Void) {
     Alamofire.request(.GET, path)
-      .responseSpeciesArray { (request, response, speciesWrapper, error) in
-        if let anError = error
-        {
-          completionHandler(nil, error)
-          return
-        }
-        completionHandler(speciesWrapper, nil)
+      .responseSpeciesArray { response in
+        return response.result
     }
   }
   
-  class func getSpecies(completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
+  class func getSpecies(completionHandler: (Result<SpeciesWrapper, NSError>) -> Void) {
     getSpeciesAtPath(StarWarsSpecies.endpointForSpecies(), completionHandler: completionHandler)
   }
   
   
-  class func getMoreSpecies(wrapper: SpeciesWrapper?, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
+  class func getMoreSpecies(wrapper: SpeciesWrapper?, completionHandler: (Result<SpeciesWrapper, NSError>) -> Void) -> Bool {
     if wrapper == nil || wrapper?.next == nil
     {
-      completionHandler(nil, nil)
-      return
+      return false
     }
     getSpeciesAtPath(wrapper!.next!, completionHandler: completionHandler)
+    return true
   }
 }
 
 extension Alamofire.Request {
-  func responseSpeciesArray(completionHandler: (NSURLRequest, NSHTTPURLResponse?, SpeciesWrapper?, NSError?) -> Void) -> Self {
-    let responseSerializer = GenericResponseSerializer<SpeciesWrapper> { request, response, data in
-      if let responseData = data
-      {
-        var jsonError: NSError?
-        let jsonData:AnyObject? = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &jsonError)
-        if jsonData == nil || jsonError != nil
-        {
-          return (nil, jsonError)
-        }
-        let json = JSON(jsonData!)
-        if json.error != nil || json == nil
-        {
-          return (nil, json.error)
-        }
-        
-        var wrapper:SpeciesWrapper = SpeciesWrapper()
+  func responseSpeciesArray(completionHandler: Response<SpeciesWrapper, NSError> -> Void) -> Self {
+    let responseSerializer = ResponseSerializer<SpeciesWrapper, NSError> { request, response, data, error in
+      guard error == nil else {
+        return .Failure(error!)
+      }
+      guard let responseData = data else {
+        let failureReason = "Array could not be serialized because input data was nil."
+        let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
+        return .Failure(error)
+      }
+      
+      let JSONResponseSerializer = Request.JSONResponseSerializer(options: .AllowFragments)
+      let result = JSONResponseSerializer.serializeResponse(request, response, responseData, error)
+      
+      switch result {
+      case .Success(let value):
+        let json = SwiftyJSON.JSON(value)
+        let wrapper = SpeciesWrapper()
         wrapper.next = json["next"].stringValue
         wrapper.previous = json["previous"].stringValue
         wrapper.count = json["count"].intValue
         
         var allSpecies:Array = Array<StarWarsSpecies>()
-        println(json)
+        print(json)
         let results = json["results"]
-        println(results)
+        print(results)
         for jsonSpecies in results
         {
-          println(jsonSpecies.1)
-          let species = StarWarsSpecies(json: jsonSpecies.1, id: jsonSpecies.0.toInt())
+          print(jsonSpecies.1)
+          let species = StarWarsSpecies(json: jsonSpecies.1, id: Int(jsonSpecies.0))
           allSpecies.append(species)
         }
         wrapper.species = allSpecies
-        return (wrapper, nil)
+        return .Success(wrapper)
+      case .Failure(let error):
+        return .Failure(error)
       }
-      return (nil, nil)
     }
     
     return response(responseSerializer: responseSerializer,
