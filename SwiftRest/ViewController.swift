@@ -12,6 +12,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   var species:Array<StarWarsSpecies>?
   var speciesWrapper:SpeciesWrapper? // holds the last wrapper that we've loaded
   var isLoadingSpecies = false
+  var imageCache = Dictionary<String, ImageSearchResult>()
   
   @IBOutlet weak var tableview: UITableView?
   
@@ -95,23 +96,34 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
       cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
       cell.imageView?.image = nil
       if let name = species.name {
-        // this isn't ideal since it will keep running even if the cell scrolls off of the screen
-        // if we had lots of cells we'd want to stop this process when the cell gets reused
-        DuckDuckGoSearchController.imageFromSearchString(name, completionHandler: {
-          (imageSearchResult, error) in
-          if error != nil {
-            print(error)
-          }
-          if let cellToUpdate = self.tableview?.cellForRowAtIndexPath(indexPath)
-          {
-            if cellToUpdate.imageView?.image == nil
-            {
-              cellToUpdate.imageView?.image = imageSearchResult?.image // will work fine even if image is nil
-              cellToUpdate.detailTextLabel?.text = imageSearchResult?.fullAttribution()
-              cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+        if let cachedImageResult = imageCache[name]
+        {
+          cell.imageView?.image = cachedImageResult.image // will work fine even if image is nil
+          cell.detailTextLabel?.text = cachedImageResult.fullAttribution()
+        }
+        else
+        {
+          // load image from web
+          // this isn't ideal since it will keep running even if the cell scrolls off of the screen
+          // if we had lots of cells we'd want to stop this process when the cell gets reused
+          DuckDuckGoSearchController.imageFromSearchString(name, completionHandler: {
+            (imageSearchResult, error) in
+            if error != nil {
+              print(error)
             }
-          }
-        })
+            // Save the image so we won't have to keep fetching it if they scroll
+            self.imageCache[name] = imageSearchResult
+            if let cellToUpdate = self.tableview?.cellForRowAtIndexPath(indexPath)
+            {
+              if cellToUpdate.imageView?.image == nil
+              {
+                cellToUpdate.imageView?.image = imageSearchResult?.image // will work fine even if image is nil
+                cellToUpdate.detailTextLabel?.text = imageSearchResult?.fullAttribution()
+                cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+              }
+            }
+          })
+        }
       }
       
       // See if we need to load more species
