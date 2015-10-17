@@ -88,27 +88,55 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
     
-    if self.species != nil && self.species!.count >= indexPath.row
-    {
+    if self.species != nil && self.species!.count >= indexPath.row  {
       let species = self.species![indexPath.row]
       cell.textLabel?.text = species.name
-      cell.detailTextLabel?.text = species.classification
+      cell.detailTextLabel?.text = " " // if it's empty or nil it won't update correctly in iOS 8, see http://stackoverflow.com/questions/25793074/subtitles-of-uitableviewcell-wont-update
+      cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
+      cell.imageView?.image = nil
+      if let name = species.name {
+        // this isn't ideal since it will keep running even if the cell scrolls off of the screen
+        // if we had lots of cells we'd want to stop this process when the cell gets reused
+        DuckDuckGoSearchController.imageFromSearchString(name, completionHandler: {
+          (imageSearchResult, error) in
+          if error != nil {
+            print(error)
+          }
+          if let cellToUpdate = self.tableview?.cellForRowAtIndexPath(indexPath)
+          {
+            if cellToUpdate.imageView?.image == nil
+            {
+              cellToUpdate.imageView?.image = imageSearchResult?.image // will work fine even if image is nil
+              cellToUpdate.detailTextLabel?.text = imageSearchResult?.fullAttribution()
+              cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+            }
+          }
+        })
+      }
       
       // See if we need to load more species
-      let rowsToLoadFromBottom = 5;
-      let rowsLoaded = self.species!.count
-      if (!self.isLoadingSpecies && (indexPath.row >= (rowsLoaded - rowsToLoadFromBottom)))
+      if self.species != nil && self.species!.count >= indexPath.row
       {
-        if let totalRows = self.speciesWrapper?.count {
-          let remainingSpeciesToLoad = totalRows - rowsLoaded;
-          if (remainingSpeciesToLoad > 0)
-          {
-            self.loadMoreSpecies()
+        let species = self.species![indexPath.row]
+        cell.textLabel?.text = species.name
+        cell.detailTextLabel?.text = species.classification
+        
+        // See if we need to load more species
+        let rowsToLoadFromBottom = 5;
+        let rowsLoaded = self.species!.count
+        if (!self.isLoadingSpecies && (indexPath.row >= (rowsLoaded - rowsToLoadFromBottom)))
+        {
+          if let totalRows = self.speciesWrapper?.count {
+            let remainingSpeciesToLoad = totalRows - rowsLoaded;
+            if (remainingSpeciesToLoad > 0)
+            {
+              self.loadMoreSpecies()
+            }
           }
         }
       }
     }
-    
+
     return cell
   }
   

@@ -20,4 +20,18 @@ class ImageSearchResult
     source = aSource
     attributionURL = anAttributionURL
   }
+  
+  func fullAttribution() -> String {
+    var result:String = ""
+    if attributionURL != nil && attributionURL!.isEmpty == false {
+      result += "Image from \(attributionURL!)"
+    }
+    if source != nil && source!.isEmpty == false  {
+      if result.isEmpty {
+        result += "Image from "
+      }
+      result += " \(source!)"
+    }
+    return result
+  }
 }

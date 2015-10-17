@@ -10,7 +10,43 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-class DuckDuckGoSearchController {
+class DuckDuckGoSearchController
+{
+  private class func endpointForSearchString(searchString: String) -> String {
+    // URL encode it, e.g., "Yoda's Species" -&gt; "Yoda%27s%20Species"
+    // and add star wars to the search string so that we don't get random pictures of the Hutt valley or Droid phones
+    let encoded = "\(searchString) star wars".stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+    // create the search string
+    // append &t=grokswift so DuckDuckGo knows who's using their services
+    return "https://api.duckduckgo.com/?q=\(encoded!)&format=json&t=grokswift"
+  }
+  
+  class func imageFromSearchString(searchString: String, completionHandler: (ImageSearchResult?, NSError?) -> Void) {
+    let searchURLString = endpointForSearchString(searchString)
+    Alamofire.request(.GET, searchURLString)
+      .responseDuckDuckGoImageURL { response in
+        if let error = response.result.error
+        {
+          completionHandler(response.result.value, error)
+          return
+        }
+        let imageURLResult = response.result.value
+        guard let imageURL = imageURLResult?.imageURL where imageURL.isEmpty == false else {
+          completionHandler(response.result.value, nil)
+          return
+        }
+        // got the URL, now to load it
+        Alamofire.request(.GET, imageURL)
+          .response { (request, response, data, error) in
+            guard let imageData = data else {
+              completionHandler(imageURLResult, nil)
+              return
+            }
+            imageURLResult?.image = UIImage(data: imageData)
+            completionHandler(imageURLResult, nil)
+        }
+    }
+  }
 }
 
 let IMAGE_KEY = "Image"
@@ -28,7 +64,7 @@ extension Alamofire.Request {
       
       let JSONResponseSerializer = Request.JSONResponseSerializer(options: .AllowFragments)
       let result = JSONResponseSerializer.serializeResponse(request, response, responseData, error)
-
+      
       switch result {
       case .Success(let value):
         let json = SwiftyJSON.JSON(value)
