@@ -27,13 +27,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   {
     isLoadingSpecies = true
     StarWarsSpecies.getSpecies({ (speciesWrapper, error) in
-      if error != nil
-      {
+      guard error == nil else {
         // TODO: improved error handling
         self.isLoadingSpecies = false
         let alert = UIAlertController(title: "Error", message: "Could not load first species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
+        return
       }
       self.addSpeciesFromWrapper(speciesWrapper)
       self.isLoadingSpecies = false
