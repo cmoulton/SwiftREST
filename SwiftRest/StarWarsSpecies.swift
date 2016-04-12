@@ -95,7 +95,10 @@ class StarWarsSpecies {
   }
   
   private class func getSpeciesAtPath(path: String, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
-    Alamofire.request(.GET, path)
+    // iOS 9: Replace HTTP with HTTPS
+    let securePath = path.stringByReplacingOccurrencesOfString("http://", withString: "https://", options: .AnchoredSearch)
+    
+    Alamofire.request(.GET, securePath)
       .responseSpeciesArray { response in
         if let error = response.result.error
         {
