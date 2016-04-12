@@ -100,12 +100,7 @@ class StarWarsSpecies {
     
     Alamofire.request(.GET, securePath)
       .responseSpeciesArray { response in
-        if let error = response.result.error
-        {
-          completionHandler(nil, error)
-          return
-        }
-        completionHandler(response.result.value, nil)
+        completionHandler(response.result.value, response.result.error)
     }
   }
   
