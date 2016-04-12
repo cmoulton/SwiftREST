@@ -55,7 +55,7 @@ enum SpeciesFields: String {
 }
 
 class SpeciesWrapper {
-  var species: Array<StarWarsSpecies>?
+  var species: [StarWarsSpecies]?
   var count: Int?
   private var next: String?
   private var previous: String?
@@ -73,8 +73,8 @@ class StarWarsSpecies {
   var averageLifespan: Int?
   var homeworld: String?
   var language: String?
-  var people: Array<String>?
-  var films: Array<String>?
+  var people: [String]?
+  var films: [String]?
   var created: NSDate?
   var edited: NSDate?
   var url: String?
@@ -111,12 +111,11 @@ class StarWarsSpecies {
   }
   
   class func getMoreSpecies(wrapper: SpeciesWrapper?, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
-    if wrapper == nil || wrapper?.next == nil
-    {
+    guard let nextPath = wrapper?.next else {
       completionHandler(nil, nil)
       return
     }
-    getSpeciesAtPath(wrapper!.next!, completionHandler: completionHandler)
+    getSpeciesAtPath(nextPath, completionHandler: completionHandler)
   }
 }
 
@@ -143,7 +142,7 @@ extension Alamofire.Request {
         wrapper.previous = json["previous"].stringValue
         wrapper.count = json["count"].intValue
         
-        var allSpecies:Array = Array<StarWarsSpecies>()
+        var allSpecies = [StarWarsSpecies]()
         print(json)
         let results = json["results"]
         print(results)

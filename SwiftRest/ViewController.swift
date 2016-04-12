@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-  var species:Array<StarWarsSpecies>?
+  var species:[StarWarsSpecies]?
   var speciesWrapper:SpeciesWrapper? // holds the last wrapper that we've loaded
   var isLoadingSpecies = false
   
@@ -44,36 +44,33 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   func loadMoreSpecies()
   {
     self.isLoadingSpecies = true
-    if self.species != nil && self.speciesWrapper != nil && self.species!.count < self.speciesWrapper!.count
-    {
-      // there are more species out there!
-      StarWarsSpecies.getMoreSpecies(self.speciesWrapper, completionHandler: { (moreWrapper, error) in
-        if error != nil
-        {
-          // TODO: improved error handling
-          self.isLoadingSpecies = false
-          let alert = UIAlertController(title: "Error", message: "Could not load more species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
-          alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
-          self.presentViewController(alert, animated: true, completion: nil)
-        }
-        print("got more!")
-        self.addSpeciesFromWrapper(moreWrapper)
-        self.isLoadingSpecies = false
-        self.tableview?.reloadData()
-      })
+    guard let species = self.species, let wrapper = self.speciesWrapper where species.count < wrapper.count else {
+      // no more species to fetch
+      return
     }
+    // there are more species out there
+    StarWarsSpecies.getMoreSpecies(self.speciesWrapper, completionHandler: { (moreWrapper, error) in
+      guard error == nil else {
+        // TODO: improved error handling
+        self.isLoadingSpecies = false
+        let alert = UIAlertController(title: "Error", message: "Could not load more species \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
+        return
+      }
+      print("got more species")
+      self.addSpeciesFromWrapper(moreWrapper)
+      self.isLoadingSpecies = false
+      self.tableview?.reloadData()
+    })
   }
   
-  func addSpeciesFromWrapper(wrapper: SpeciesWrapper?)
-  {
+  func addSpeciesFromWrapper(wrapper: SpeciesWrapper?) {
     self.speciesWrapper = wrapper
-    if self.species == nil
-    {
+    if self.species == nil {
       self.species = self.speciesWrapper?.species
-    }
-    else if self.speciesWrapper != nil && self.speciesWrapper!.species != nil
-    {
-      self.species = self.species! + self.speciesWrapper!.species!
+    } else if let newSpecies = self.speciesWrapper?.species, let currentSpecies = self.species {
+      self.species = currentSpecies + newSpecies
     }
   }
   
@@ -93,21 +90,16 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) 
     
-    if self.species != nil && self.species!.count >= indexPath.row
-    {
-      let species = self.species![indexPath.row]
-      cell.textLabel?.text = species.name
-      cell.detailTextLabel?.text = species.classification
+    if let numberOfSpecies = self.species?.count where numberOfSpecies >= indexPath.row {
+      if let species = self.species?[indexPath.row] {
+        cell.textLabel?.text = species.name
+        cell.detailTextLabel?.text = species.classification
+      }
       
       // See if we need to load more species
       let rowsToLoadFromBottom = 5;
-      let rowsLoaded = self.species!.count
-      if (!self.isLoadingSpecies && (indexPath.row >= (rowsLoaded - rowsToLoadFromBottom)))
-      {
-        let totalRows = self.speciesWrapper!.count!
-        let remainingSpeciesToLoad = totalRows - rowsLoaded;
-        if (remainingSpeciesToLoad > 0)
-        {
+      if !self.isLoadingSpecies && indexPath.row >= (numberOfSpecies - rowsToLoadFromBottom) {
+        if let totalSpeciesCount = self.speciesWrapper?.count where totalSpeciesCount - numberOfSpecies > 0 {
           self.loadMoreSpecies()
         }
       }
