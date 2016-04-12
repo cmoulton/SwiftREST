@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B37D56527B2D233C370989B8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6CA6A9D6233A0BF23A96829 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		B37D56527B2D233C370989B8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6CA6A9D6233A0BF23A96829 /* Pods.framework */; };
 		CFE4B7D61A98DF8900DB16AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7D51A98DF8900DB16AF /* AppDelegate.swift */; };
 		CFE4B7D81A98DF8900DB16AF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7D71A98DF8900DB16AF /* ViewController.swift */; };
 		CFE4B7DB1A98DF8900DB16AF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFE4B7D91A98DF8900DB16AF /* Main.storyboard */; };
@@ -373,7 +373,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -411,7 +411,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "SwiftRest/Bridging-Header.h";

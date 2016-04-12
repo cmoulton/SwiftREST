@@ -86,7 +86,7 @@ class StarWarsSpecies {
     self.classification = json[SpeciesFields.Classification.rawValue].stringValue
     self.designation = json[SpeciesFields.Designation.rawValue].stringValue
     self.averageHeight = json[SpeciesFields.AverageHeight.rawValue].int
-    // TODO: add all the fields!
+    // TODO: add all the fields
   }
   
   // MARK: Endpoints

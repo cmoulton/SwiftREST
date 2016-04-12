@@ -84,11 +84,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   
   // MARK: Tableview Delegate / Data Source
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    if self.species == nil
-    {
+    guard let species = self.species else {
       return 0
     }
-    return self.species!.count
+    return species.count
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
