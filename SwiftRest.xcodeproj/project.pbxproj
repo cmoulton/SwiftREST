@@ -15,6 +15,7 @@
 		CFE4B7E01A98DF8900DB16AF /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = CFE4B7DE1A98DF8900DB16AF /* LaunchScreen.xib */; };
 		CFE4B7EC1A98DF8900DB16AF /* SwiftRestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7EB1A98DF8900DB16AF /* SwiftRestTests.swift */; };
 		CFE4B7F91A99FD3000DB16AF /* StarWarsSpecies.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7F81A99FD3000DB16AF /* StarWarsSpecies.swift */; };
+		F48A5E83AA5198746FAA8330 /* Pods_SwiftRest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02ADF280AAFCB00E07E4BA39 /* Pods_SwiftRest.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +29,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		02ADF280AAFCB00E07E4BA39 /* Pods_SwiftRest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftRest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		317962380FAAEF38F26AC0EC /* Pods-SwiftRest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftRest.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftRest/Pods-SwiftRest.release.xcconfig"; sourceTree = "<group>"; };
+		A811BF9BE873380541E5C2F2 /* Pods-SwiftRest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftRest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftRest/Pods-SwiftRest.debug.xcconfig"; sourceTree = "<group>"; };
 		B6CA6A9D6233A0BF23A96829 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8D8AE3F2A5B7740C8243ED1 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		CFE4B7D01A98DF8900DB16AF /* SwiftRest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftRest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +55,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B37D56527B2D233C370989B8 /* Pods.framework in Frameworks */,
+				F48A5E83AA5198746FAA8330 /* Pods_SwiftRest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +74,8 @@
 			children = (
 				B8D8AE3F2A5B7740C8243ED1 /* Pods.debug.xcconfig */,
 				DD84577790D0F72673070880 /* Pods.release.xcconfig */,
+				A811BF9BE873380541E5C2F2 /* Pods-SwiftRest.debug.xcconfig */,
+				317962380FAAEF38F26AC0EC /* Pods-SwiftRest.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -137,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				B6CA6A9D6233A0BF23A96829 /* Pods.framework */,
+				02ADF280AAFCB00E07E4BA39 /* Pods_SwiftRest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -148,12 +156,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CFE4B7EF1A98DF8900DB16AF /* Build configuration list for PBXNativeTarget "SwiftRest" */;
 			buildPhases = (
-				4D3BA6B01A897580B942CA43 /* Check Pods Manifest.lock */,
+				4D3BA6B01A897580B942CA43 /* [CP] Check Pods Manifest.lock */,
 				CFE4B7CC1A98DF8900DB16AF /* Sources */,
 				CFE4B7CD1A98DF8900DB16AF /* Frameworks */,
 				CFE4B7CE1A98DF8900DB16AF /* Resources */,
-				EC72B6D9E6509A7AEB3392F4 /* Embed Pods Frameworks */,
-				F9EF8B6BFFCCF5D4D00D543C /* Copy Pods Resources */,
+				EC72B6D9E6509A7AEB3392F4 /* [CP] Embed Pods Frameworks */,
+				F9EF8B6BFFCCF5D4D00D543C /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -242,14 +250,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4D3BA6B01A897580B942CA43 /* Check Pods Manifest.lock */ = {
+		4D3BA6B01A897580B942CA43 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -257,34 +265,34 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		EC72B6D9E6509A7AEB3392F4 /* Embed Pods Frameworks */ = {
+		EC72B6D9E6509A7AEB3392F4 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwiftRest/Pods-SwiftRest-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F9EF8B6BFFCCF5D4D00D543C /* Copy Pods Resources */ = {
+		F9EF8B6BFFCCF5D4D00D543C /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwiftRest/Pods-SwiftRest-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -422,7 +430,7 @@
 		};
 		CFE4B7F01A98DF8900DB16AF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8D8AE3F2A5B7740C8243ED1 /* Pods.debug.xcconfig */;
+			baseConfigurationReference = A811BF9BE873380541E5C2F2 /* Pods-SwiftRest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SwiftRest/Info.plist;
@@ -435,7 +443,7 @@
 		};
 		CFE4B7F11A98DF8900DB16AF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD84577790D0F72673070880 /* Pods.release.xcconfig */;
+			baseConfigurationReference = 317962380FAAEF38F26AC0EC /* Pods-SwiftRest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SwiftRest/Info.plist;
