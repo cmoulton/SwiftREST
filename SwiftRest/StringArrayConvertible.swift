@@ -9,14 +9,12 @@
 import Foundation
 
 extension String {
-  func splitStringToArray() -> Array<String>
-  {
-    var outputArray = Array<String>()
+  func splitStringToArray() -> [String] {
+    var outputArray = [String]()
     
-    let components = self.componentsSeparatedByString(",")
-    for component in components
-    {
-      let trimmedComponent = component.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+    let components = self.components(separatedBy: ",")
+    for component in components {
+      let trimmedComponent = component.trimmingCharacters(in: CharacterSet.whitespaces)
       outputArray.append(trimmedComponent)
     }
     

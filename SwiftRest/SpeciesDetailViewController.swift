@@ -19,7 +19,7 @@ class SpeciesDetailViewController: UIViewController {
     super.viewDidLoad()
   }
   
-  override func viewWillAppear(animated: Bool) {
+  override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
     self.displaySpeciesDetails()
@@ -28,44 +28,38 @@ class SpeciesDetailViewController: UIViewController {
   func displaySpeciesDetails()
   {
     self.descriptionLabel!.text = ""
-    if self.species == nil
-    {
+    guard self.species != nil else {
       return
     }
     
-    if let name =  self.species!.name
-    {
+    if let name = self.species!.name {
       self.title = name
-      if let language = self.species!.language
-      {
+      if let language = self.species!.language {
         self.descriptionLabel!.text! += "Members of the \(name) species speak \(language). "
       }
       
-      if let height = self.species!.averageHeight
-      {
-        self.descriptionLabel!.text! += "The \(self.species!.name!) can be identified by their height, typically \(self.species!.averageHeight!)cm."
+      if let height = self.species?.averageHeight {
+        self.descriptionLabel!.text! += "The \(name) can be identified by their height, typically \(height)cm."
       }
       
       var eyeColors:String?
-      if let colors = self.species!.eyeColors
-      {
-        eyeColors = ", ".join(colors)
+      if let colors = self.species!.eyeColors {
+        eyeColors = colors.joined(separator: ", ")
       }
       var skinColors:String?
-      if let colors = self.species!.skinColors
-      {
-        skinColors = ", ".join(colors)
+      if let colors = self.species!.skinColors {
+        skinColors = colors.joined(separator: ", ")
       }
       var hairColors:String?
-      if let colors = self.species!.hairColors
-      {
-        hairColors = ", ".join(colors)
+      if let colors = self.species!.hairColors {
+        hairColors = colors.joined(separator: ", ")
       }
       
-      if eyeColors != nil && skinColors != nil && hairColors != nil
-      {
+      if let eyeColors = eyeColors,
+        let skinColors = skinColors,
+        let hairColors = hairColors {
         // if any of the colors, tack 'em on
-        self.descriptionLabel!.text! += "\n\nTypical coloring includes eyes:\n\t\(eyeColors!)\nhair:\n\t\(hairColors!)\nand skin:\n\t\(skinColors!)"
+        self.descriptionLabel!.text! += "\n\nTypical coloring includes eyes:\n\t\(eyeColors)\nhair:\n\t\(hairColors)\nand skin:\n\t\(skinColors)"
       }
     }
 
@@ -73,13 +67,10 @@ class SpeciesDetailViewController: UIViewController {
     {
       // some species have numeric lifespans (like 100) and some have lifespans like "indefinite", so we handle both by adding " years" to the numeric ones
       self.descriptionLabel!.text! += "\n\nTheir average lifespan is \(self.species!.averageLifespan!)"
-      let years = self.species?.averageLifespan?.toInt()
-      if years != nil
-      {
+      if let yearsString = species?.averageLifespan,
+        let _ = Int(yearsString) {
         self.descriptionLabel!.text! += " years."
-      }
-      else
-      {
+      } else {
         self.descriptionLabel!.text! += "."
       }
     }

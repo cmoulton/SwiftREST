@@ -8,7 +8,7 @@
 
 /*
 Duck Duck Go has an Instant Answers API that can be accessed like:
-http://api.duckduckgo.com/?q=%22yoda%27s%20species%22&format=json&pretty=1
+https://api.duckduckgo.com/?q=%22yoda%27s%20species%22&format=json&pretty=1
 (&pretty=1 is optional but nice if you're calling it in a web browser)
 Documentation is at https://api.duckduckgo.com/api
 
@@ -58,13 +58,15 @@ The results look like the following and includes an image:
 }
 */
 
-
 import Foundation
 import Alamofire
-import SwiftyJSON
 
-class ImageSearchResult
-{
+enum BackendError: Error {
+  case urlError(reason: String)
+  case objectSerialization(reason: String)
+}
+
+class ImageSearchResult {
   let imageURL:String?
   let source:String?
   let attributionURL:String?
@@ -82,8 +84,7 @@ class ImageSearchResult
       result += "Image from \(attributionURL!)"
     }
     if source != nil && source!.isEmpty == false  {
-      if result.isEmpty
-      {
+      if result.isEmpty {
         result += "Image from "
       }
       result += " \(source!)"
@@ -92,89 +93,81 @@ class ImageSearchResult
   }
 }
 
-class duckDuckGoSearchController
-{
-  private class func endpointForSearchString(searchString: String) -> String {
+class duckDuckGoSearchController {
+  static let IMAGE_KEY = "Image"
+  static let SOURCE_KEY = "AbstractSource"
+  static let ATTRIBUTION_KEY = "AbstractURL"
+  
+  fileprivate class func endpointForSearchString(_ searchString: String) -> String {
     // URL encode it, e.g., "Yoda's Species" -> "Yoda%27s%20Species"
     // and add star wars to the search string so that we don't get random pictures of the Hutt valley or Droid phones
-    let encoded = "\(searchString) star wars".stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+    let encoded = "\(searchString) star wars".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
     // create the search string
     // append &t=grokswift so DuckDuckGo knows who's using their services
-    return "http://api.duckduckgo.com/?q=\(encoded!)&format=json&t=grokswift"
+    return "https://api.duckduckgo.com/?q=\(encoded!)&format=json&t=grokswift"
   }
   
-  class func imageFromSearchString(searchString: String, completionHandler: (ImageSearchResult?, NSError?) -> Void) {
+  class func imageFromSearchString(_ searchString: String, completionHandler: @escaping (Result<ImageSearchResult>) -> Void) {
     let searchURLString = endpointForSearchString(searchString)
-    Alamofire.request(.GET, searchURLString)
-      .responseDuckDuckGoImageURL { (request, response, imageURLResult, error) in
-        if let anError = error
-        {
-          completionHandler(imageURLResult, error)
+    Alamofire.request(searchURLString)
+      .responseJSON { response in
+        if let error = response.result.error {
+          completionHandler(.failure(error))
           return
         }
-        if imageURLResult == nil || imageURLResult?.imageURL?.isEmpty == true
-        {
-          completionHandler(imageURLResult, nil)
+        
+        let imageURLResult = imageFromResponse(response)
+        
+        guard imageURLResult.isSuccess,
+          let result = imageURLResult.value else {
+          completionHandler(.failure(imageURLResult.error!))
           return
         }
+        
+        guard let imageURL = result.imageURL,
+          !imageURL.isEmpty else {
+            completionHandler(.failure(BackendError.objectSerialization(reason:
+              "Could not get image URL from JSON")))
+            return
+        }
+        
         // got the URL, now to load it
-        Alamofire.request(.GET, imageURLResult!.imageURL!)
-          .response { (request, response, data, error) in
-            if data == nil
-            {
-              completionHandler(imageURLResult, nil)
+        Alamofire.request(imageURL)
+          .response { response in
+            if response.data == nil {
+              completionHandler(.failure(BackendError.objectSerialization(reason:
+                "Could not get image data from URL")))
               return
             }
-            imageURLResult?.image = UIImage(data: data! as NSData)
-            completionHandler(imageURLResult, nil)
+            result.image = UIImage(data: response.data!)
+            completionHandler(.success(result))
         }
     }
   }
-
-}
-
-let IMAGE_KEY = "Image"
-let SOURCE_KEY = "AbstractSource"
-let ATTRIBUTION_KEY = "AbstractURL"
-
-extension Alamofire.Request {
-  // single species
-  class func imageURLResponseSerializer() -> Serializer {
-    return { request, response, data in
-      // pull out the image element from the JSON, if there is one
-      if data == nil {
-        return (nil, nil)
-      }
-      
-      var jsonError: NSError?
-      let jsonData:AnyObject? = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &jsonError)
-      if jsonError != nil
-      {
-        println(jsonError)
-        return (nil, jsonError)
-      }
-      let json = JSON(jsonData!)
-      if json.error != nil
-      {
-        println(json.error)
-        return (nil, json.error)
-      }
-      if json == nil
-      {
-        return (nil, nil)
-      }
-      let imageURL = json[IMAGE_KEY].string
-      let source = json[SOURCE_KEY].string
-      let attribution = json[ATTRIBUTION_KEY].string
-      let result = ImageSearchResult(anImageURL: imageURL, aSource: source, anAttributionURL: attribution)
-      return (result, nil)
+  
+  private class func imageFromResponse(_ response: DataResponse<Any>) -> Result<ImageSearchResult> {
+    guard response.result.error == nil else {
+      // got an error in getting the data, need to handle it
+      print(response.result.error!)
+      return .failure(response.result.error!)
     }
+    
+    // make sure we got JSON and it's a dictionary
+    guard let json = response.result.value as? [String: Any] else {
+      print("didn't get image info as JSON from API")
+      return .failure(BackendError.objectSerialization(reason:
+        "Did not get JSON dictionary in response"))
+    }
+    
+    // turn JSON in to Image object
+    guard let imageURL = json[IMAGE_KEY] as? String,
+      let source = json[SOURCE_KEY] as? String,
+      let attribution = json[ATTRIBUTION_KEY] as? String else {
+        return .failure(BackendError.objectSerialization(reason:
+          "Could not get image from JSON"))
+    }
+    
+    let result = ImageSearchResult(anImageURL: imageURL, aSource: source, anAttributionURL: attribution)
+    return .success(result)
   }
-  
-  func responseDuckDuckGoImageURL(completionHandler: (NSURLRequest, NSHTTPURLResponse?, ImageSearchResult?, NSError?) -> Void) -> Self {
-    return response(serializer: Request.imageURLResponseSerializer(), completionHandler: { (request, response, result, error) in
-      completionHandler(request, response, result as? ImageSearchResult, error)
-    })
-  }
-  
 }
