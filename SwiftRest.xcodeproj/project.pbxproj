@@ -195,6 +195,7 @@
 				TargetAttributes = {
 					CFE4B7CF1A98DF8900DB16AF = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = 87PYA4QFSY;
 						LastSwiftMigration = 0810;
 					};
 					CFE4B7E41A98DF8900DB16AF = {
@@ -426,6 +427,7 @@
 			baseConfigurationReference = D39313C530F18D8FD0335611 /* Pods-SwiftRest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 87PYA4QFSY;
 				INFOPLIST_FILE = SwiftRest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -439,6 +441,7 @@
 			baseConfigurationReference = BD4C8DC93B1E197F7340B532 /* Pods-SwiftRest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 87PYA4QFSY;
 				INFOPLIST_FILE = SwiftRest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
