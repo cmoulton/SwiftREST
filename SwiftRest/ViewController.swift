@@ -119,4 +119,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
   }
   
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    super.prepare(for: segue, sender: sender)
+    
+    if let speciesDetailVC = segue.destination as? SpeciesDetailViewController {
+      if let indexPath = self.tableview?.indexPathForSelectedRow {
+        speciesDetailVC.species = self.species?[indexPath.row]
+      }
+    }
+  }
+  
 }
