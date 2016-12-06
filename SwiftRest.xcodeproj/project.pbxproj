@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A877DAB91AB1E83F4CC91E3D /* Pods_SwiftRest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D19382BD47056CF580FEFA44 /* Pods_SwiftRest.framework */; };
 		CF09CBE71DF7518600AA4CB4 /* StringArrayConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF09CBE61DF7518600AA4CB4 /* StringArrayConvertible.swift */; };
+		CF09CBE91DF7539900AA4CB4 /* SpeciesDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF09CBE81DF7539900AA4CB4 /* SpeciesDetailViewController.swift */; };
 		CFE4B7D61A98DF8900DB16AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7D51A98DF8900DB16AF /* AppDelegate.swift */; };
 		CFE4B7D81A98DF8900DB16AF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7D71A98DF8900DB16AF /* ViewController.swift */; };
 		CFE4B7DB1A98DF8900DB16AF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFE4B7D91A98DF8900DB16AF /* Main.storyboard */; };
@@ -32,6 +33,7 @@
 		B6CA6A9D6233A0BF23A96829 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD4C8DC93B1E197F7340B532 /* Pods-SwiftRest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftRest.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftRest/Pods-SwiftRest.release.xcconfig"; sourceTree = "<group>"; };
 		CF09CBE61DF7518600AA4CB4 /* StringArrayConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringArrayConvertible.swift; sourceTree = "<group>"; };
+		CF09CBE81DF7539900AA4CB4 /* SpeciesDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeciesDetailViewController.swift; sourceTree = "<group>"; };
 		CFE4B7D01A98DF8900DB16AF /* SwiftRest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftRest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFE4B7D41A98DF8900DB16AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CFE4B7D51A98DF8900DB16AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			children = (
 				CFE4B7D51A98DF8900DB16AF /* AppDelegate.swift */,
 				CFE4B7D71A98DF8900DB16AF /* ViewController.swift */,
+				CF09CBE81DF7539900AA4CB4 /* SpeciesDetailViewController.swift */,
 				CFE4B7D91A98DF8900DB16AF /* Main.storyboard */,
 				CFE4B7F81A99FD3000DB16AF /* StarWarsSpecies.swift */,
 				CFE4B7DC1A98DF8900DB16AF /* Images.xcassets */,
@@ -301,6 +304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CFE4B7D81A98DF8900DB16AF /* ViewController.swift in Sources */,
+				CF09CBE91DF7539900AA4CB4 /* SpeciesDetailViewController.swift in Sources */,
 				CFE4B7D61A98DF8900DB16AF /* AppDelegate.swift in Sources */,
 				CF09CBE71DF7518600AA4CB4 /* StringArrayConvertible.swift in Sources */,
 				CFE4B7F91A99FD3000DB16AF /* StarWarsSpecies.swift in Sources */,
