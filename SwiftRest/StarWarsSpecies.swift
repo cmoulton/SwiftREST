@@ -99,10 +99,10 @@ class StarWarsSpecies {
   
   // MARK: Endpoints
   class func endpointForID(_ id: Int) -> String {
-    return "http://swapi.co/api/species/\(id)"
+    return "https://swapi.co/api/species/\(id)"
   }
   class func endpointForSpecies() -> String {
-    return "http://swapi.co/api/species/"
+    return "https://swapi.co/api/species/"
   }
   
   // MARK: CRUD
