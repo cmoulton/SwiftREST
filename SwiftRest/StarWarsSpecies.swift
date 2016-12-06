@@ -63,8 +63,8 @@ enum SpeciesFields: String {
 class SpeciesWrapper {
   var species: Array<StarWarsSpecies>?
   var count: Int?
-  private var next: String?
-  private var previous: String?
+  fileprivate var next: String?
+  fileprivate var previous: String?
 }
 
 class StarWarsSpecies {
@@ -81,8 +81,8 @@ class StarWarsSpecies {
   var language: String?
   var people: Array<String>?
   var films: Array<String>?
-  var created: NSDate?
-  var edited: NSDate?
+  var created: Date?
+  var edited: Date?
   var url: String?
   
   required init(json: JSON, id: Int?) {
@@ -96,7 +96,7 @@ class StarWarsSpecies {
   }
 
   // MARK: Endpoints
-  class func endpointForID(id: Int) -> String {
+  class func endpointForID(_ id: Int) -> String {
     return "http://swapi.co/api/species/\(id)"
   }
   class func endpointForSpecies() -> String {
@@ -105,7 +105,7 @@ class StarWarsSpecies {
   
   // MARK: CRUD
   // GET / Read single species
-  class func speciesByID(id: Int, completionHandler: (StarWarsSpecies?, NSError?) -> Void) {
+  class func speciesByID(_ id: Int, completionHandler: @escaping (StarWarsSpecies?, NSError?) -> Void) {
     Alamofire.request(.GET, StarWarsSpecies.endpointForID(id))
       .responseSpecies { (request, response, species, error) in
         if let anError = error
@@ -118,7 +118,7 @@ class StarWarsSpecies {
   }
   
   // GET / Read all species
-  private class func getSpeciesAtPath(path: String, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
+  fileprivate class func getSpeciesAtPath(_ path: String, completionHandler: @escaping (SpeciesWrapper?, NSError?) -> Void) {
     Alamofire.request(.GET, path)
       .responseSpeciesArray { (request, response, speciesWrapper, error) in
         if let anError = error
@@ -130,11 +130,11 @@ class StarWarsSpecies {
     }
   }
   
-  class func getSpecies(completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
+  class func getSpecies(_ completionHandler: @escaping (SpeciesWrapper?, NSError?) -> Void) {
     getSpeciesAtPath(StarWarsSpecies.endpointForSpecies(), completionHandler: completionHandler)
   }
   
-  class func getMoreSpecies(wrapper: SpeciesWrapper?, completionHandler: (SpeciesWrapper?, NSError?) -> Void) {
+  class func getMoreSpecies(_ wrapper: SpeciesWrapper?, completionHandler: @escaping (SpeciesWrapper?, NSError?) -> Void) {
     if wrapper == nil || wrapper?.next == nil
     {
       completionHandler(nil, nil)
@@ -171,7 +171,7 @@ extension Alamofire.Request {
     }
   }
   
-  func responseSpecies(completionHandler: (NSURLRequest, NSHTTPURLResponse?, StarWarsSpecies?, NSError?) -> Void) -> Self {
+  func responseSpecies(_ completionHandler: (NSURLRequest, NSHTTPURLResponse?, StarWarsSpecies?, NSError?) -> Void) -> Self {
     return response(serializer: Request.speciesResponseSerializer(), completionHandler: { (request, response, species, error) in
       completionHandler(request, response, species as? StarWarsSpecies, error)
     })
@@ -216,7 +216,7 @@ extension Alamofire.Request {
     }
   }
   
-  func responseSpeciesArray(completionHandler: (NSURLRequest, NSHTTPURLResponse?, SpeciesWrapper?, NSError?) -> Void) -> Self {
+  func responseSpeciesArray(_ completionHandler: (NSURLRequest, NSHTTPURLResponse?, SpeciesWrapper?, NSError?) -> Void) -> Self {
     return response(serializer: Request.speciesArrayResponseSerializer(), completionHandler: { (request, response, speciesWrapper, error) in
       completionHandler(request, response, speciesWrapper as? SpeciesWrapper, error)
     })

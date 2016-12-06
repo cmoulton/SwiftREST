@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B37D56527B2D233C370989B8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6CA6A9D6233A0BF23A96829 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		A877DAB91AB1E83F4CC91E3D /* Pods_SwiftRest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D19382BD47056CF580FEFA44 /* Pods_SwiftRest.framework */; };
 		CFE4B7D61A98DF8900DB16AF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7D51A98DF8900DB16AF /* AppDelegate.swift */; };
 		CFE4B7D81A98DF8900DB16AF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE4B7D71A98DF8900DB16AF /* ViewController.swift */; };
 		CFE4B7DB1A98DF8900DB16AF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CFE4B7D91A98DF8900DB16AF /* Main.storyboard */; };
@@ -29,7 +29,7 @@
 
 /* Begin PBXFileReference section */
 		B6CA6A9D6233A0BF23A96829 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8D8AE3F2A5B7740C8243ED1 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		BD4C8DC93B1E197F7340B532 /* Pods-SwiftRest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftRest.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftRest/Pods-SwiftRest.release.xcconfig"; sourceTree = "<group>"; };
 		CFE4B7D01A98DF8900DB16AF /* SwiftRest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftRest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFE4B7D41A98DF8900DB16AF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CFE4B7D51A98DF8900DB16AF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -42,7 +42,8 @@
 		CFE4B7EB1A98DF8900DB16AF /* SwiftRestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftRestTests.swift; sourceTree = "<group>"; };
 		CFE4B7F51A98DFFA00DB16AF /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		CFE4B7F81A99FD3000DB16AF /* StarWarsSpecies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StarWarsSpecies.swift; sourceTree = "<group>"; };
-		DD84577790D0F72673070880 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		D19382BD47056CF580FEFA44 /* Pods_SwiftRest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftRest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D39313C530F18D8FD0335611 /* Pods-SwiftRest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftRest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftRest/Pods-SwiftRest.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B37D56527B2D233C370989B8 /* Pods.framework in Frameworks */,
+				A877DAB91AB1E83F4CC91E3D /* Pods_SwiftRest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,11 +65,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4BD0DF4D4582732708F61EE8 /* Pods */ = {
+		40186350AC93998893A2E075 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				B8D8AE3F2A5B7740C8243ED1 /* Pods.debug.xcconfig */,
-				DD84577790D0F72673070880 /* Pods.release.xcconfig */,
+				D39313C530F18D8FD0335611 /* Pods-SwiftRest.debug.xcconfig */,
+				BD4C8DC93B1E197F7340B532 /* Pods-SwiftRest.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -79,8 +80,8 @@
 				CFE4B7D21A98DF8900DB16AF /* SwiftRest */,
 				CFE4B7E81A98DF8900DB16AF /* SwiftRestTests */,
 				CFE4B7D11A98DF8900DB16AF /* Products */,
-				4BD0DF4D4582732708F61EE8 /* Pods */,
 				E3A4C8EB21FB38D64479B65E /* Frameworks */,
+				40186350AC93998893A2E075 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -137,6 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				B6CA6A9D6233A0BF23A96829 /* Pods.framework */,
+				D19382BD47056CF580FEFA44 /* Pods_SwiftRest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -148,12 +150,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CFE4B7EF1A98DF8900DB16AF /* Build configuration list for PBXNativeTarget "SwiftRest" */;
 			buildPhases = (
-				4D3BA6B01A897580B942CA43 /* Check Pods Manifest.lock */,
+				10D9F90AD72D952F0447F143 /* [CP] Check Pods Manifest.lock */,
 				CFE4B7CC1A98DF8900DB16AF /* Sources */,
 				CFE4B7CD1A98DF8900DB16AF /* Frameworks */,
 				CFE4B7CE1A98DF8900DB16AF /* Resources */,
-				EC72B6D9E6509A7AEB3392F4 /* Embed Pods Frameworks */,
-				F9EF8B6BFFCCF5D4D00D543C /* Copy Pods Resources */,
+				44BF10E275084BE95BF8AD94 /* [CP] Embed Pods Frameworks */,
+				15331FD5AABB91C5862CBAE3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -193,9 +195,11 @@
 				TargetAttributes = {
 					CFE4B7CF1A98DF8900DB16AF = {
 						CreatedOnToolsVersion = 6.1.1;
+						LastSwiftMigration = 0810;
 					};
 					CFE4B7E41A98DF8900DB16AF = {
 						CreatedOnToolsVersion = 6.1.1;
+						LastSwiftMigration = 0810;
 						TestTargetID = CFE4B7CF1A98DF8900DB16AF;
 					};
 				};
@@ -240,49 +244,49 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4D3BA6B01A897580B942CA43 /* Check Pods Manifest.lock */ = {
+		10D9F90AD72D952F0447F143 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		EC72B6D9E6509A7AEB3392F4 /* Embed Pods Frameworks */ = {
+		15331FD5AABB91C5862CBAE3 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwiftRest/Pods-SwiftRest-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F9EF8B6BFFCCF5D4D00D543C /* Copy Pods Resources */ = {
+		44BF10E275084BE95BF8AD94 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SwiftRest/Pods-SwiftRest-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -419,24 +423,26 @@
 		};
 		CFE4B7F01A98DF8900DB16AF /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B8D8AE3F2A5B7740C8243ED1 /* Pods.debug.xcconfig */;
+			baseConfigurationReference = D39313C530F18D8FD0335611 /* Pods-SwiftRest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SwiftRest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				USER_HEADER_SEARCH_PATHS = "Pods/** SwiftRest/Pods/**";
 			};
 			name = Debug;
 		};
 		CFE4B7F11A98DF8900DB16AF /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD84577790D0F72673070880 /* Pods.release.xcconfig */;
+			baseConfigurationReference = BD4C8DC93B1E197F7340B532 /* Pods-SwiftRest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SwiftRest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				USER_HEADER_SEARCH_PATHS = "Pods/** SwiftRest/Pods/**";
 			};
 			name = Release;
@@ -456,6 +462,7 @@
 				INFOPLIST_FILE = SwiftRestTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftRest.app/SwiftRest";
 			};
 			name = Debug;
@@ -471,6 +478,7 @@
 				INFOPLIST_FILE = SwiftRestTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SwiftRest.app/SwiftRest";
 			};
 			name = Release;

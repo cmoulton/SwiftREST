@@ -7,6 +7,19 @@
 //
 
 import UIKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -36,9 +49,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
       {
         // TODO: improved error handling
         self.isLoadingSpecies = false
-        var alert = UIAlertController(title: "Error", message: "Could not load first species :( \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+        var alert = UIAlertController(title: "Error", message: "Could not load first species :( \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
       }
       self.addSpeciesFromWrapper(speciesWrapper)
       self.isLoadingSpecies = false
@@ -57,9 +70,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         {
           // TODO: improved error handling
           self.isLoadingSpecies = false
-          var alert = UIAlertController(title: "Error", message: "Could not load more species :( \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.Alert)
-          alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
-          self.presentViewController(alert, animated: true, completion: nil)
+          var alert = UIAlertController(title: "Error", message: "Could not load more species :( \(error?.localizedDescription)", preferredStyle: UIAlertControllerStyle.alert)
+          alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+          self.present(alert, animated: true, completion: nil)
         }
         println("got more!")
         self.addSpeciesFromWrapper(moreWrapper)
@@ -69,7 +82,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
   }
   
-  func addSpeciesFromWrapper(wrapper: SpeciesWrapper?)
+  func addSpeciesFromWrapper(_ wrapper: SpeciesWrapper?)
   {
     self.speciesWrapper = wrapper
     if self.species == nil
@@ -84,7 +97,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   
   // MARK: TableViewDataSource
   
-  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if self.species == nil
     {
       return 0
@@ -92,8 +105,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     return self.species!.count
   }
   
-  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
     
     if self.species != nil && self.species!.count >= indexPath.row
     {
@@ -118,19 +131,19 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     return cell
   }
   
-  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
   }
   
   // alternate row colors
-  func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     if indexPath.row % 2 == 0
     {
       cell.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0) // very light gray
     }
     else
     {
-      cell.backgroundColor = UIColor.whiteColor()
+      cell.backgroundColor = UIColor.white
     }
   }
   
