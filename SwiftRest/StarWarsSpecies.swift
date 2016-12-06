@@ -75,10 +75,10 @@ class StarWarsSpecies {
   var classification: String?
   var designation: String?
   var averageHeight: Int?
-  var skinColors: String?
-  var hairColors: String? // TODO: parse into array
-  var eyeColors: String? // TODO: array
-  var averageLifespan: Int?
+  var skinColors: [String]?
+  var hairColors: [String]?
+  var eyeColors: [String]?
+  var averageLifespan: String?
   var homeworld: String?
   var language: String?
   var people: [String]?
@@ -88,11 +88,60 @@ class StarWarsSpecies {
   var url: String?
   
   required init(json: [String: Any]) {
+    // strings
     self.name = json[SpeciesFields.Name.rawValue] as? String
     self.classification = json[SpeciesFields.Classification.rawValue] as? String
     self.designation = json[SpeciesFields.Designation.rawValue] as? String
+    self.averageLifespan = json[SpeciesFields.AverageLifespan.rawValue] as? String
+    self.language = json[SpeciesFields.Language.rawValue] as? String
+    // lifespan is sometimes "unknown" or "infinite", so we can't use an int
+    self.homeworld = json[SpeciesFields.Homeworld.rawValue] as? String
+    self.url = json[SpeciesFields.Url.rawValue] as? String
+    
+    // ints
     self.averageHeight = json[SpeciesFields.AverageHeight.rawValue] as? Int
-    // TODO: more fields!
+    
+    // People, Films
+    // there are arrays of JSON objects, so we need to extract the strings from them
+    self.people = json[SpeciesFields.People.rawValue] as? [String]
+    self.films = json[SpeciesFields.Films.rawValue] as? [String]
+    
+    // SkinColors, HairColors, EyeColors
+    if let string = json[SpeciesFields.SkinColors.rawValue] as? String {
+      self.skinColors = string.splitStringToArray()
+    }
+    if let string = json[SpeciesFields.HairColors.rawValue] as? String {
+      self.hairColors = string.splitStringToArray()
+    }
+    if let string = json[SpeciesFields.EyeColors.rawValue] as? String {
+      self.eyeColors = string.splitStringToArray()
+    }
+    
+    // Dates
+    // Created, Edited
+    let dateFormatter = self.dateFormatter()
+    if let dateString = json[SpeciesFields.Created.rawValue] as? String {
+      self.created = dateFormatter.date(from: dateString)
+    }
+    if let dateString = json[SpeciesFields.Edited.rawValue] as? String {
+      self.edited = dateFormatter.date(from: dateString)
+    }
+  }
+  
+  fileprivate func dateFormatter() -> DateFormatter {
+  // create it
+  let dateFormatter = DateFormatter()
+  // set the format as a text string
+  // we might get away with just doing this one line configuration for the date formatter
+  dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SZ"
+  // but we if leave it at that then the user's settings for datetime & locale
+  // can mess it up. So:
+  // the 'Z' at the end means it's UTC (aka, Zulu time), so let's tell
+  dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+  // dates coming from an english webserver are generally en_US_POSIX locale
+  // this would be different if your server spoke Spanish, Chinese, etc
+  dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+  return dateFormatter
   }
   
   // MARK: Endpoints
