@@ -38,7 +38,11 @@ import Foundation
 
 import Foundation
 import Alamofire
-import SwiftyJSON
+
+enum BackendError: Error {
+  case urlError(reason: String)
+  case objectSerialization(reason: String)
+}
 
 enum SpeciesFields: String {
   case Name = "name"
@@ -61,14 +65,14 @@ enum SpeciesFields: String {
 }
 
 class SpeciesWrapper {
-  var species: Array<StarWarsSpecies>?
+  var species: [StarWarsSpecies]?
   var count: Int?
   fileprivate var next: String?
   fileprivate var previous: String?
 }
 
 class StarWarsSpecies {
-  var idNumber: Int?
+  var id: Int?
   var name: String?
   var classification: String?
   var designation: String?
@@ -79,22 +83,20 @@ class StarWarsSpecies {
   var averageLifespan: Int?
   var homeworld: String?
   var language: String?
-  var people: Array<String>?
-  var films: Array<String>?
+  var people: [String]?
+  var films: [String]?
   var created: Date?
   var edited: Date?
   var url: String?
   
-  required init(json: JSON, id: Int?) {
-    println(json)
-    self.idNumber = id
-    self.name = json[SpeciesFields.Name.rawValue].stringValue
-    self.classification = json[SpeciesFields.Classification.rawValue].stringValue
-    self.designation = json[SpeciesFields.Designation.rawValue].stringValue
-    self.averageHeight = json[SpeciesFields.AverageHeight.rawValue].int
-    // TODO: more fields!    
+  required init(json: [String: Any]) {
+    self.name = json[SpeciesFields.Name.rawValue] as? String
+    self.classification = json[SpeciesFields.Classification.rawValue] as? String
+    self.designation = json[SpeciesFields.Designation.rawValue] as? String
+    self.averageHeight = json[SpeciesFields.AverageHeight.rawValue] as? Int
+    // TODO: more fields!
   }
-
+  
   // MARK: Endpoints
   class func endpointForID(_ id: Int) -> String {
     return "http://swapi.co/api/species/\(id)"
@@ -105,121 +107,101 @@ class StarWarsSpecies {
   
   // MARK: CRUD
   // GET / Read single species
-  class func speciesByID(_ id: Int, completionHandler: @escaping (StarWarsSpecies?, NSError?) -> Void) {
-    Alamofire.request(.GET, StarWarsSpecies.endpointForID(id))
-      .responseSpecies { (request, response, species, error) in
-        if let anError = error
-        {
-          completionHandler(nil, error)
+  class func speciesByID(_ id: Int, completionHandler: @escaping (Result<StarWarsSpecies>) -> Void) {
+    let _ = Alamofire.request(StarWarsSpecies.endpointForID(id))
+      .responseJSON { response in
+        if let error = response.result.error {
+          completionHandler(.failure(error))
           return
         }
-        completionHandler(species, nil)
+        let speciesResult = StarWarsSpecies.speciesFromResponse(response)
+        completionHandler(speciesResult)
     }
   }
   
   // GET / Read all species
-  fileprivate class func getSpeciesAtPath(_ path: String, completionHandler: @escaping (SpeciesWrapper?, NSError?) -> Void) {
-    Alamofire.request(.GET, path)
-      .responseSpeciesArray { (request, response, speciesWrapper, error) in
-        if let anError = error
-        {
-          completionHandler(nil, error)
+  fileprivate class func getSpeciesAtPath(_ path: String, completionHandler: @escaping (Result<SpeciesWrapper>) -> Void) {
+    // make sure it's HTTPS because sometimes the API gives us HTTP URLs
+    guard var urlComponents = URLComponents(string: path) else {
+      let error = BackendError.urlError(reason: "Tried to load an invalid URL")
+      completionHandler(.failure(error))
+      return
+    }
+    urlComponents.scheme = "https"
+    guard let url = try? urlComponents.asURL() else {
+      let error = BackendError.urlError(reason: "Tried to load an invalid URL")
+      completionHandler(.failure(error))
+      return
+    }
+    let _ = Alamofire.request(url)
+      .responseJSON { response in
+        if let error = response.result.error {
+          completionHandler(.failure(error))
           return
         }
-        completionHandler(speciesWrapper, nil)
+        let speciesWrapperResult = StarWarsSpecies.speciesArrayFromResponse(response)
+        completionHandler(speciesWrapperResult)
     }
   }
   
-  class func getSpecies(_ completionHandler: @escaping (SpeciesWrapper?, NSError?) -> Void) {
+  class func getSpecies(_ completionHandler: @escaping (Result<SpeciesWrapper>) -> Void) {
     getSpeciesAtPath(StarWarsSpecies.endpointForSpecies(), completionHandler: completionHandler)
   }
   
-  class func getMoreSpecies(_ wrapper: SpeciesWrapper?, completionHandler: @escaping (SpeciesWrapper?, NSError?) -> Void) {
-    if wrapper == nil || wrapper?.next == nil
-    {
-      completionHandler(nil, nil)
+  class func getMoreSpecies(_ wrapper: SpeciesWrapper?, completionHandler: @escaping (Result<SpeciesWrapper>) -> Void) {
+    guard let nextURL = wrapper?.next else {
+      let error = BackendError.objectSerialization(reason: "Did not get wrapper for more species")
+      completionHandler(.failure(error))
       return
     }
-    getSpeciesAtPath(wrapper!.next!, completionHandler: completionHandler)
+    getSpeciesAtPath(nextURL, completionHandler: completionHandler)
   }
   
-}
-
-extension Alamofire.Request {
-  // single species
-  class func speciesResponseSerializer() -> Serializer {
-    return { request, response, data in
-      println(data)
-      if data == nil {
-        return (nil, nil)
-      }
-      
-      var jsonError: NSError?
-      let jsonData:AnyObject? = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &jsonError)
-      let json = JSON(jsonData!)
-      if json.error != nil
-      {
-        println(json.error)
-        return (nil, json.error)
-      }
-      if json == nil
-      {
-        return (nil, nil)
-      }
-      let species = StarWarsSpecies(json: json, id: nil)
-      return (species, nil)
+  private class func speciesFromResponse(_ response: DataResponse<Any>) -> Result<StarWarsSpecies> {
+    guard response.result.error == nil else {
+      // got an error in getting the data, need to handle it
+      print(response.result.error!)
+      return .failure(response.result.error!)
     }
+    
+    // make sure we got JSON and it's a dictionary
+    guard let json = response.result.value as? [String: Any] else {
+      print("didn't get species object as JSON from API")
+      return .failure(BackendError.objectSerialization(reason:
+        "Did not get JSON dictionary in response"))
+    }
+    
+    let species = StarWarsSpecies(json: json)
+    return .success(species)
   }
   
-  func responseSpecies(_ completionHandler: (NSURLRequest, NSHTTPURLResponse?, StarWarsSpecies?, NSError?) -> Void) -> Self {
-    return response(serializer: Request.speciesResponseSerializer(), completionHandler: { (request, response, species, error) in
-      completionHandler(request, response, species as? StarWarsSpecies, error)
-    })
-  }
-  
-  // all species
-  class func speciesArrayResponseSerializer() -> Serializer {
-    return { request, response, data in
-      if data == nil {
-        return (nil, nil)
-      }
-
-      var jsonError: NSError?
-      let jsonData:AnyObject? = NSJSONSerialization.JSONObjectWithData(data!, options: nil, error: &jsonError)
-      if jsonData == nil || jsonError != nil
-      {
-        return (nil, jsonError)
-      }
-      let json = JSON(jsonData!)
-      if json.error != nil || json == nil
-      {
-        return (nil, json.error)
-      }
-      
-      var wrapper:SpeciesWrapper = SpeciesWrapper()
-      wrapper.next = json["next"].stringValue
-      wrapper.previous = json["previous"].stringValue
-      wrapper.count = json["count"].intValue
-      
-      var allSpecies:Array = Array<StarWarsSpecies>()
-      println(json)
-      let results = json["results"]
-      println(results)
-      for jsonSpecies in results
-      {
-        println(jsonSpecies.1)
-        let species = StarWarsSpecies(json: jsonSpecies.1, id: jsonSpecies.0.toInt())
+  private class func speciesArrayFromResponse(_ response: DataResponse<Any>) -> Result<SpeciesWrapper> {
+    guard response.result.error == nil else {
+      // got an error in getting the data, need to handle it
+      print(response.result.error!)
+      return .failure(response.result.error!)
+    }
+    
+    // make sure we got JSON and it's a dictionary
+    guard let json = response.result.value as? [String: Any] else {
+      print("didn't get species object as JSON from API")
+      return .failure(BackendError.objectSerialization(reason:
+        "Did not get JSON dictionary in response"))
+    }
+    
+    let wrapper:SpeciesWrapper = SpeciesWrapper()
+    wrapper.next = json["next"] as? String
+    wrapper.previous = json["previous"] as? String
+    wrapper.count = json["count"] as? Int
+    
+    var allSpecies: [StarWarsSpecies] = []
+    if let results = json["results"] as? [[String: Any]] {
+      for jsonSpecies in results {
+        let species = StarWarsSpecies(json: jsonSpecies)
         allSpecies.append(species)
       }
-      wrapper.species = allSpecies
-      return (wrapper, nil)
     }
+    wrapper.species = allSpecies
+    return .success(wrapper)
   }
-  
-  func responseSpeciesArray(_ completionHandler: (NSURLRequest, NSHTTPURLResponse?, SpeciesWrapper?, NSError?) -> Void) -> Self {
-    return response(serializer: Request.speciesArrayResponseSerializer(), completionHandler: { (request, response, speciesWrapper, error) in
-      completionHandler(request, response, speciesWrapper as? SpeciesWrapper, error)
-    })
-  }
-  
 }
