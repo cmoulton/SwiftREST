@@ -50,7 +50,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="qMm-P0-BtG" kind="showDetail" id="ot1-Lq-CV2"/>
+                                            <segue destination="qMm-P0-BtG" kind="show" action="showDetailViewController:sender:" id="ot1-Lq-CV2"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
