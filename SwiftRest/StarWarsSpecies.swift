@@ -60,19 +60,17 @@ enum SpeciesFields: String {
   case Created = "created"
   case Edited = "edited"
   case Url = "url"
-  
-  //static let allFieldNames = [Name, Classification, Designation, AverageHeight, SkinColors, HairColors, EyeColors, AverageLifespan, Homeworld, Language, People, Films, Created, Edited, Url]
 }
 
 class SpeciesWrapper {
   var species: [StarWarsSpecies]?
   var count: Int?
-  fileprivate var next: String?
-  fileprivate var previous: String?
+  var next: String?
+  var previous: String?
 }
 
 class StarWarsSpecies {
-  var id: Int?
+  var idNumber: Int?
   var name: String?
   var classification: String?
   var designation: String?

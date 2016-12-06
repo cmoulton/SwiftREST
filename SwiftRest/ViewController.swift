@@ -66,7 +66,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
   }
 
-  
   func addSpeciesFromWrapper(_ wrapper: SpeciesWrapper?) {
     self.speciesWrapper = wrapper
     if self.species == nil {
@@ -85,7 +84,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as UITableViewCell
+    let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
     
     if self.species != nil && self.species!.count >= indexPath.row {
       let species = self.species![indexPath.row]
