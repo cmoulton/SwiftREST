@@ -63,13 +63,13 @@ class DuckDuckGoSearchController {
           completionHandler(.failure(error))
           return
         }
-        DuckDuckGoSearchController.imageSearchResultFromResponse(response) { imageSearchResult in
+        DuckDuckGoSearchController.imageSearchResult(from: response) { imageSearchResult in
           completionHandler(imageSearchResult)
         }
     }
   }
   
-  private class func imageSearchResultFromResponse(_ response: DataResponse<Any>, completionHandler: @escaping (Result<ImageSearchResult>) -> Void) {
+  private class func imageSearchResult(from response: DataResponse<Any>, completionHandler: @escaping (Result<ImageSearchResult>) -> Void) {
     guard response.result.error == nil else {
       // got an error in getting the data, need to handle it
       print(response.result.error!)
