@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
+  
   var species: [StarWarsSpecies]?
   var speciesWrapper: SpeciesWrapper? // holds the last wrapper that we've loaded
   var isLoadingSpecies = false
@@ -65,7 +65,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
       }
     }
   }
-
+  
   func addSpeciesFromWrapper(_ wrapper: SpeciesWrapper?) {
     self.speciesWrapper = wrapper
     if self.species == nil {
@@ -86,16 +86,35 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
     
-    if self.species != nil && self.species!.count >= indexPath.row {
-      let species = self.species![indexPath.row]
-      cell.textLabel?.text = species.name
-      cell.detailTextLabel?.text = species.classification
+    if let species = species, species.count >= indexPath.row {
+      let speciesToShow = species[indexPath.row]
+      cell.textLabel?.text = speciesToShow.name
+      cell.detailTextLabel?.text = " "
+      cell.detailTextLabel?.adjustsFontSizeToFitWidth = true
+      cell.imageView?.image = nil
+      if let name = speciesToShow.name {
+        // this isn't ideal since it will keep running even if the cell scrolls off of the screen
+        // if we had lots of cells we'd want to stop this process when the cell gets reused
+        DuckDuckGoSearchController.image(for: name) {
+          result in
+          if let error = result.error {
+            print(error)
+          }
+          let imageSearchResult = result.value
+          if let cellToUpdate = self.tableview?.cellForRow(at: indexPath),
+            cellToUpdate.imageView?.image == nil {
+            cellToUpdate.imageView?.image = imageSearchResult?.image // will work fine even if image is nil
+            cellToUpdate.detailTextLabel?.text = imageSearchResult?.fullAttribution()
+            cellToUpdate.setNeedsLayout() // need to reload the view, which won't happen otherwise since this is in an async call
+          }
+        }
+      }
       
       // See if we need to load more species
       let rowsToLoadFromBottom = 5;
-      let rowsLoaded = self.species!.count
+      let rowsLoaded = species.count
       if (!self.isLoadingSpecies && (indexPath.row >= (rowsLoaded - rowsToLoadFromBottom))) {
-        let totalRows = self.speciesWrapper!.count!
+        let totalRows = self.speciesWrapper?.count ?? 0
         let remainingSpeciesToLoad = totalRows - rowsLoaded;
         if (remainingSpeciesToLoad > 0) {
           self.loadMoreSpecies()
