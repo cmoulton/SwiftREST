@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 Teak Mobile Inc. All rights reserved.
 //
 
-import Foundation
-
 /* API Response to http http://swapi.co/api/species/3/ looks like:
 {
   "name": "Wookiee",
